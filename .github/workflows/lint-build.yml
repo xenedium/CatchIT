@@ -78,6 +78,10 @@ jobs:
           echo "DATABASE_HOST={{ secret.DATABASE_HOST }}" >> .env
           echo "DATABASE_PORT={{ secret.DATABASE_PORT }}" >> .env
 
+      - name: Install dependencies
+        run: |
+          pipenv install
+
       - name: Migrate to the db
         run: |
           pipenv run python manage.py migrate

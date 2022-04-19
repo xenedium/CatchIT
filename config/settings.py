@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from re import TEMPLATE
+from environ import Env
+
+env = Env()
+
+Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-p-q^i#ck3=noig6ifau7=j=&j104^gglxfw-2tllu_i2r43mh$'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -79,8 +84,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'HOST': env('DATABASE_HOST'),
+        'PORT': env('DATABASE_PORT'),
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
     }
 }
 

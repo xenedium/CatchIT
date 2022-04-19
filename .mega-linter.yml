@@ -11,6 +11,7 @@ DISABLE_LINTERS:
   - "PYTHON_MYPY"
   - "PYTHON_BANDIT"
   - "TYPESCRIPT_STANDARD"
+  - "YAML_YAMLLINT"
 DISABLE:
   - COPYPASTE # Comment to enable checks of excessive copy-pastes
   - SPELL # Comment to enable checks of spelling mistakes

@@ -86,6 +86,10 @@ jobs:
         run: |
           pipenv run python manage.py migrate
 
+      - name: Static files
+        run: |
+          pipenv run python manage.py collectstatic --noinput
+
       - name: Run Django tests
         run: |
           pipenv run python manage.py test

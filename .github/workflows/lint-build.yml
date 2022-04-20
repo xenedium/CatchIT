@@ -96,4 +96,4 @@ jobs:
 
       - name: Check for deploy
         run: |
-          pipenv run python manage.py check --deploy 2>&1 | grep '0 issues'
+          pipenv run python manage.py check --deploy 2>&1 | grep 'no issues'

@@ -97,3 +97,17 @@ jobs:
       - name: Check for deploy
         run: |
           pipenv run python manage.py check --deploy 2>&1 | grep 'no issues'
+  deploy:
+    name: Deploy to heroku
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@2
+      - uses: AkhileshNS/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrects.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+      - name: Deployed successfully
+        run: |
+          echo Deployed !!

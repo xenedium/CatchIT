@@ -8,6 +8,8 @@ django = "*"
 djangorestframework = "*"
 django-environ = "*"
 mysqlclient = "*"
+gunicorn = "*"
+whitenoise = "*"
 
 [dev-packages]
 

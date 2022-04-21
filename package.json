@@ -2,7 +2,7 @@
     "name": "django-react-boilerplate",
     "version": "1.0.0",
     "scripts": {
-        "build": "cd frontend && npm install && npm run build"
+        "build": "cd frontend && npm install && npm run build && mv build/static/* build/ && rm build/static"
     },
     "repository": {
         "type": "git",

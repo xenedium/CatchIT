@@ -1,0 +1,17 @@
+{
+    "name": "django-react-boilerplate",
+    "version": "1.0.0",
+    "scripts": {
+        "build": "cd frontend && npm install && npm run build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/xenedium/django-react-boilerplate.git"
+    },
+    "author": "Xenedium",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/xenedium/django-react-boilerplate/issues"
+    },
+    "homepage": "https://github.com/xenedium/django-react-boilerplate#readme"
+}

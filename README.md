@@ -1,5 +1,5 @@
-# Python django-react project
-## Visit at [https://my-django-react-project.herokuapp.com/](https://my-django-react-project.herokuapp.com/)
+# CatchIT
+## Visit at [https://catchit.shop](https://catchit.shop)
 
 
 # Steps :

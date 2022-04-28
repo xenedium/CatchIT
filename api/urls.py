@@ -1,15 +1,8 @@
-from django.db import router
-from django.urls import include, path
-from rest_framework import routers
+from django.urls import re_path
 
-from .views import UserViewSet, PostViewSet, RandomNumbersGenerator
+from .views import RandomNumbersGenerator
 
-router = routers.DefaultRouter()
-
-router.register(r'users', UserViewSet)
-router.register(r'posts', PostViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('random/', RandomNumbersGenerator.as_view(), name='random'),
+    re_path(r'random/?', RandomNumbersGenerator.as_view(), name='random'),
 ]

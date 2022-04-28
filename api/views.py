@@ -1,20 +1,9 @@
-from rest_framework import viewsets
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .serializers import UserSerializer, PostSerializer
-from .models import User, Post
 
 from random import randint
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
 
 class RandomNumbersGenerator(APIView):
     def get(self, request, format=None):

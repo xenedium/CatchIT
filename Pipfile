@@ -10,6 +10,7 @@ django-environ = "*"
 mysqlclient = "*"
 gunicorn = "*"
 whitenoise = "*"
+pillow = "*"
 
 [dev-packages]
 

@@ -8,13 +8,11 @@
 
 # Description :
 
-### This repository's subject will change as we decide which one will be chosen, currently it's a working boilerplate django-react app
-
+### CatchIT, a webapp for buying and selling any type of valuable items.
+### Create your account and start selling right away !
+### This app is an academic project still under development.
 
 # Infos :
 - ### For each commit in this repository (or internal pull request) the commited code will pass through a linter then some tests to see if the code can be safely deployed.
-- ### In these series of tests the required dependencies like python 3.10 and node modules will be installed, if successful the React App will be built and the moved into the static directory using [collectstatic](https://docs.djangoproject.com/en/4.0/ref/contrib/staticfiles/#django-admin-collectstatic) and then the ```./manage check --deploy``` will be run to see if the app is correctly setup for deployement
 - ### If the linter and test workflow succeeds the code will go into production and will automatically be deployed to heroku.
-- ### This CI was achieved using github actions.
-- ### To see more about this check the [lint-build-deploy.yml](https://github.com/xenedium/django-react-boilerplate/blob/master/.github/workflows/lint-build-deploy.yml) file.
-- ### Click [here](https://github.com/xenedium/django-react-boilerplate/actions/runs/2205077387) to see a run example.
+- ### For commits in side branchs, only the linter and build process will be run.

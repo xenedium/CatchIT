@@ -35,8 +35,8 @@ DEBUG = True if env('DEBUG_MODE') == 'True' else False
 ALLOWED_HOSTS = ["*"]
 
 SECURE_HSTS_SECONDS = 2_592_000
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 SECURE_SSL_REDIRECT = DEBUG is False
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'frontend',
+    'drf_api_logger',
 ]
 
 MIDDLEWARE = [
@@ -64,6 +65,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware',
+    'api.JwtMiddleware.JwtMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -153,8 +156,14 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+DRF_API_LOGGER_DATABASE = True  # Default to False
+
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-    )
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
+
+
+if not DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = ('rest_framework.renderers.JSONRenderer',)

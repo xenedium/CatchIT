@@ -28,6 +28,17 @@ class UserSerializer(serializers.ModelSerializer):
         except Exception as e:
             raise serializers.ValidationError({"status": 500, "message": "Internal server error", "error": str(e)})
 
+    
+    def update(self, instance, validated_data):
+        if 'password' in validated_data:
+            instance.password = hashlib.sha256(validated_data['password'].encode('utf-8')).hexdigest()
+        instance.firstname = validated_data['firstname']
+        instance.lastname = validated_data['lastname']
+        instance.email = validated_data['email']
+        instance.phone_number = validated_data['phone_number']
+        instance.save()
+        return instance
+
     class Meta:
         model = User
         exclude = ('is_admin', 'is_superuser', 'is_banned', 'created_at')

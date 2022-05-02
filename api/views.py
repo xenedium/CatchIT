@@ -10,7 +10,7 @@ from config.settings import SECRET_KEY
 import hashlib, datetime
 
 
-class UserViewAPI(APIView):
+class UserViewAPI(APIView):                 # Get public user info
     def get(self, request):
         if request.GET.get('id'):
             users = User.objects.get(id=request.GET.get('id')[0])
@@ -24,10 +24,11 @@ class UserViewAPI(APIView):
         else:
             return Response({"status": 400, "message": "Bad request"}, status=400)
 
-class UserMeAPI(APIView):
+
+class UserMeAPI(APIView):                   # Get current and private user info
     def get(self, request):
         if request.jwt_user:
-            users = User.objects.get(id=request.jwt_user["id"])
+            users = User.objects.get(id=request.jwt_user['id'])
             serializer = UserSerializer(users, many=False)
             return Response({
                 "id": serializer.data['id'],
@@ -39,7 +40,8 @@ class UserMeAPI(APIView):
         else:
             return Response({"status": 401, "message": "Unauthorized"}, status=401)
 
-class UserLoginAPI(APIView):
+
+class UserLoginAPI(APIView):                # Login user
     def post(self, request):
         email, password = request.data['email'], request.data['password']
         if User.objects.filter(email=email).exists():
@@ -48,7 +50,7 @@ class UserLoginAPI(APIView):
                 return Response({"status": 200, "message": "Successfully logged in", 
                     "token": encode(
                         {
-                            "sub": user.id,
+                            "id": user.id,
                             "firstname": user.firstname,
                             "lastname": user.lastname,
                             "email": user.email,
@@ -62,7 +64,7 @@ class UserLoginAPI(APIView):
             return Response({"status": 401, "message": "Invalid email or password"}, status=401)
 
 
-class UserRegisterAPI(APIView):
+class UserRegisterAPI(APIView):             # Register user
     
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -73,6 +75,15 @@ class UserRegisterAPI(APIView):
             return Response({"status": 400, "message": "Bad request"}, status=400)
 
 
-class Test(APIView):
-    def get(self, request):
-        return Response({"status": 200, "message": "Test"})
+class UserEditAPI(APIView):                 # Edit user info
+    def put(self, request):
+        if request.jwt_user:
+            user = User.objects.get(id=request.jwt_user['id'])
+            serializer = UserSerializer(user, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status": 200, "message": "User updated successfully"}, status=200)
+            else:
+                return Response({"status": 400, "message": "Bad request"}, status=400)
+        else:
+            return Response({"status": 401, "message": "Unauthorized"}, status=401)

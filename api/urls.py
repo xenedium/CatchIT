@@ -6,9 +6,9 @@ from .views import UserViewAPI, UserMeAPI, UserLoginAPI, UserRegisterAPI, UserEd
 
 
 urlpatterns = [
-    path('users/', UserViewAPI.as_view(), name='users'),
-    path('auth-register', UserRegisterAPI.as_view(), name='users'),
-    path('auth-login', UserLoginAPI.as_view(), name='users'),
-    path('users/me', UserMeAPI.as_view(), name='users'),
-    path('users/edit', UserEditAPI.as_view(), name='users'),
+    path('users/', UserViewAPI.as_view(), name='users'),                # Public user data
+    path('auth-register', UserRegisterAPI.as_view(), name='users'),     # Register new user
+    path('auth-login', UserLoginAPI.as_view(), name='users'),           # Login existing user
+    path('users/me', UserMeAPI.as_view(), name='users'),                # Private Personal User data
+    path('users/edit', UserEditAPI.as_view(), name='users'),            # Edit Personal user data
 ]

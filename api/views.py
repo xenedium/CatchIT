@@ -10,7 +10,7 @@ from config.settings import SECRET_KEY
 import hashlib, datetime
 
 
-class UserViewAPI(APIView):                 # Get public user info
+class UserViewAPI(APIView):                 # Get public user info TODO: ADD NOT FOUND
     def get(self, request):
         if request.GET.get('id'):
             users = User.objects.get(id=request.GET.get('id')[0])

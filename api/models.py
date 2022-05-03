@@ -8,7 +8,7 @@ class User(models.Model):
     lastname = models.CharField(max_length=50, null=False, editable=True)
     email = models.EmailField(max_length=254, null=False, unique=True, editable=False)
     phone_number = models.CharField(max_length=15, null=False, unique=True, editable=False)
-    city = models.CharField(max_length=50, null=True, editable=True)
+    city = models.CharField(max_length=50, null=False, editable=True)
     password = models.CharField(max_length=64, null=False, editable=True)
     created_at = models.DateTimeField(auto_now_add=True, null=False, editable=False)
     is_admin = models.BooleanField(default=False, null=False)
@@ -39,7 +39,7 @@ class Article(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=False, editable=True)
     quantity = models.IntegerField(default=1, null=False, editable=True)
     is_sold = models.BooleanField(default=False, null=False, editable=True)
-    city = models.CharField(max_length=50, null=True, editable=True)
+    city = models.CharField(max_length=50, null=False, editable=True)
 
     def __str__(self):
         return self.title

@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=254, required=True)
     phone_number = serializers.CharField(max_length=15, required=True)
     password = serializers.CharField(max_length=64, required=True)
-
+    city = serializers.CharField(max_length=50, required=True)
 
     def create(self, validated_data):
         if User.objects.filter(email=validated_data['email']).exists():
@@ -26,9 +26,8 @@ class UserSerializer(serializers.ModelSerializer):
                         password=hashlib.sha256(validated_data['password'].encode('utf-8')).hexdigest()
                     )
         except Exception as e:
-            raise serializers.ValidationError({"status": 500, "message": "Internal server error", "error": str(e)})
+            raise serializers.ValidationError({"status": 500, "message": "Internal server error"})
 
-    
     def update(self, instance, validated_data):
         if 'password' in validated_data:
             instance.password = hashlib.sha256(validated_data['password'].encode('utf-8')).hexdigest()
@@ -56,7 +55,7 @@ class CategorySerializer(serializers.ModelSerializer):
             return Category.objects.create(**validated_data)
         except Exception as e:
             raise serializers.ValidationError({"status": 500, "message": "Internal server error"})
-    
+
     class Meta:
         model = Category
         exclude = ('created_at',)
@@ -71,6 +70,7 @@ class ArticleSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(max_digits=10, decimal_places=2, required=True)
     quantity = serializers.IntegerField(required=True)
     is_sold = serializers.BooleanField(default=False)
+    city = serializers.CharField(max_length=50, required=True)
 
     def create(self, validated_data):
         try:

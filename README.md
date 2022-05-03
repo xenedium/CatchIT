@@ -3,7 +3,7 @@
 
 
 # Steps :
-- Make a copy of the ```.env.example```  file and rename it to ```.env.example```
+- Make a copy of the ```.env.example```  file and rename it to ```.env```
 - Create and fill github secrets with the corresponding values
 
 # Description :

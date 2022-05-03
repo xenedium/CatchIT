@@ -1,5 +1,5 @@
 # CatchIT
-## Visit at [https://catchit.shop](https://catchit.shop)
+## Visit at [https://catchit.herokuapp.com/](https://catchit.herokuapp.com/)
 
 
 # Steps :

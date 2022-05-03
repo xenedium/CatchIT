@@ -10,6 +10,9 @@ django-environ = "*"
 mysqlclient = "*"
 gunicorn = "*"
 whitenoise = "*"
+pillow = "*"
+drf-api-logger = "*"
+pyjwt = "*"
 
 [dev-packages]
 

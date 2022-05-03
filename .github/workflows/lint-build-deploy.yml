@@ -87,6 +87,11 @@ jobs:
         run: |
           pipenv run python manage.py makemigrations
 
+      - name: Migrate database
+        run: |
+          pipenv run python manage.py migrate
+        if: github.ref == 'refs/heads/master'
+
       - name: Static files
         run: |
           pipenv run python manage.py collectstatic --noinput

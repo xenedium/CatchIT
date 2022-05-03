@@ -10,11 +10,14 @@ from config.settings import SECRET_KEY
 import hashlib, datetime
 
 
-class UserViewAPI(APIView):                 # Get public user info TODO: ADD NOT FOUND
+class UserViewAPI(APIView):                 # Get public user info
     def get(self, request):
         if request.GET.get('id'):
-            users = User.objects.get(id=request.GET.get('id')[0])
-            serializer = UserSerializer(users, many=False)
+            try:
+                user = User.objects.get(id=request.GET.get('id')[0])
+            except:
+                return Response({"status": 404, "message": "User not found"}, status=404)
+            serializer = UserSerializer(user, many=False)
             return Response({
                 "id": serializer.data['id'],
                 "firstname": serializer.data['firstname'],
@@ -65,7 +68,6 @@ class UserLoginAPI(APIView):                # Login user
 
 
 class UserRegisterAPI(APIView):             # Register user
-    
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
@@ -87,3 +89,22 @@ class UserEditAPI(APIView):                 # Edit user info
                 return Response({"status": 400, "message": "Bad request"}, status=400)
         else:
             return Response({"status": 401, "message": "Unauthorized"}, status=401)
+
+
+class CategoryViewAPI(APIView):
+    def get(self, request):
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        if request.jwt_user is None:                                              # Not signed in
+            return Response({"status": 401, "message": "Unauthorized"}, status=401)
+
+        serializer = CategorySerializer(data={'name': request.data['name'], 'created_by': request.jwt_user['id']})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": 200, "message": "Category created successfully"}, status=200)
+        else:
+            return Response({"status": 400, "message": "Bad request"}, status=400)
+

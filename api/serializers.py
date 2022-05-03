@@ -23,7 +23,8 @@ class UserSerializer(serializers.ModelSerializer):
                         lastname=validated_data['lastname'], 
                         email=validated_data['email'], 
                         phone_number=validated_data['phone_number'], 
-                        password=hashlib.sha256(validated_data['password'].encode('utf-8')).hexdigest()
+                        password=hashlib.sha256(validated_data['password'].encode('utf-8')).hexdigest(),
+                        city=validated_data['city']
                     )
         except Exception as e:
             raise serializers.ValidationError({"status": 500, "message": "Internal server error"})
@@ -35,6 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.lastname = validated_data['lastname']
         instance.email = validated_data['email']
         instance.phone_number = validated_data['phone_number']
+        instance.city = validated_data['city']
         instance.save()
         return instance
 
@@ -46,19 +48,32 @@ class UserSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=50, required=True)
-    created_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=True)
+    created_by = serializers.IntegerField(required=True)
 
     def create(self, validated_data):
         if Category.objects.filter(name=validated_data['name']).exists():
             raise serializers.ValidationError({"status": 400, "message": "Category with this name already exists"})
         try:
-            return Category.objects.create(**validated_data)
+            user = User.objects.get(id=validated_data['created_by'])
         except Exception as e:
-            raise serializers.ValidationError({"status": 500, "message": "Internal server error"})
+            raise serializers.ValidationError({"status": 500, "message": "Internal server error"}, code=500)
+
+        if user.is_admin:
+            try:
+                return Category.objects.create(
+                    name=validated_data['name'],
+                    created_by=user
+                )
+            except Exception as e:
+                raise serializers.ValidationError({"status": 500, "message": "Internal server error"}, code=500)
+
+        raise serializers.ValidationError({"status": 403, "message": "Forbidden"}, code=403)
+       
 
     class Meta:
         model = Category
-        exclude = ('created_at',)
+        exclude = ('created_at', )
+        write_only_fields = ('created_by', )
 
 
 class ArticleSerializer(serializers.ModelSerializer):

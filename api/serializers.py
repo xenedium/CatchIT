@@ -2,6 +2,27 @@ from rest_framework import serializers
 from .models import User, Category, Article
 import hashlib
 
+city_choices = [
+    ('Casablanca', 'Casablanca'),
+    ('Rabat', 'Rabat'),
+    ('Marrakech', 'Marrakech'),
+    ('Fes', 'Fes'),
+    ('Tanger', 'Tanger'),
+    ('Oujda', 'Oujda'),
+    ('Agadir', 'Agadir'),
+    ('Tetouan', 'Tetouan'),
+    ('Meknes', 'Meknes'),
+    ('Safi', 'Safi'),
+    ('El Jadida', 'El Jadida'),
+    ('Khouribga', 'Khouribga'),
+    ('Ouarzazate', 'Ouarzazate'),
+    ('Settat', 'Settat'),
+    ('Sidi Kacem', 'Sidi Kacem'),
+    ('Kenitra', 'Kenitra'),
+    ('Taza', 'Taza'),
+    ('Tiznit', 'Tiznit'),
+    ('Sidi Ifni', 'Sidi Ifni')
+]
 
 class UserSerializer(serializers.ModelSerializer):
     firstname = serializers.CharField(max_length=50, required=True)
@@ -9,7 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=254, required=True)
     phone_number = serializers.CharField(max_length=15, required=True)
     password = serializers.CharField(max_length=64, required=True)
-    city = serializers.CharField(max_length=50, required=True)
+    city = serializers.ChoiceField(choices=city_choices, required=True)
 
     def create(self, validated_data):
         if User.objects.filter(email=validated_data['email']).exists():
@@ -84,14 +105,14 @@ class ArticleSerializer(serializers.ModelSerializer):
     condition = serializers.ChoiceField(choices=['New', 'Used'], required=True)
     price = serializers.DecimalField(max_digits=10, decimal_places=2, required=True)
     quantity = serializers.IntegerField(required=True)
-    is_sold = serializers.BooleanField(default=False)
-    city = serializers.CharField(max_length=50, required=True)
+    is_sold = serializers.BooleanField(default=False, read_only=True)
+    city = serializers.ChoiceField(required=True, choices=city_choices)
 
     def create(self, validated_data):
         try:
             return Article.objects.create(**validated_data)
         except Exception as e:
-            raise serializers.ValidationError({"status": 500, "message": "Internal server error", "error": str(e)})
+            raise serializers.ValidationError({"status": 500, "message": "Internal server error"})
     
     class Meta:
         model = Article

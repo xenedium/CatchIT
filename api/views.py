@@ -108,3 +108,14 @@ class CategoryViewAPI(APIView):
         else:
             return Response({"status": 400, "message": "Bad request"}, status=400)
 
+class ArticleViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+
+    def get_queryset(self):
+        if self.request.GET.get('category_id'):
+            return Article.objects.filter(category_id=self.request.GET.get('category_id'))
+        else:
+            return Article.objects.all()
+
+    

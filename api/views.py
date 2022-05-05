@@ -58,6 +58,7 @@ class UserLoginAPI(APIView):                # Login user
                             "lastname": user.lastname,
                             "email": user.email,
                             "phone_number": user.phone_number,
+                            "is_admin": user.is_admin,
                             "exp": datetime.datetime.now() + datetime.timedelta(seconds=3600)
                         }
                         , SECRET_KEY, algorithm='HS256')}, status=200)
@@ -91,31 +92,46 @@ class UserEditAPI(APIView):                 # Edit user info
             return Response({"status": 401, "message": "Unauthorized"}, status=401)
 
 
-class CategoryViewAPI(APIView):
-    def get(self, request):
-        categories = Category.objects.all()
-        serializer = CategorySerializer(categories, many=True)
-        return Response(serializer.data)
-    
-    def post(self, request):
-        if request.jwt_user is None:                                              # Not signed in
+class CategoryViewSet(viewsets.ModelViewSet):           # Get all categories
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get_queryset(self):
+        if self.request.GET.get('id'):
+            return Category.objects.filter(id=self.request.GET.get('id'))
+        else:
+            return Category.objects.all()
+
+    def create(self, request):
+        if (request.jwt_user and request.jwt_user['is_admin'] == True):
+            serializer = CategorySerializer(data={'name': request.data['name'], 'created_by': request.jwt_user['id']})
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"status": 200, "message": "Category created successfully"}, status=200)
+            else:
+                return Response({"status": 400, "message": "Bad request"}, status=400)
+        else:
             return Response({"status": 401, "message": "Unauthorized"}, status=401)
 
-        serializer = CategorySerializer(data={'name': request.data['name'], 'created_by': request.jwt_user['id']})
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"status": 200, "message": "Category created successfully"}, status=200)
-        else:
-            return Response({"status": 400, "message": "Bad request"}, status=400)
 
-class ArticleViewSet(viewsets.ReadOnlyModelViewSet):
+class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
     def get_queryset(self):
         if self.request.GET.get('category_id'):
             return Article.objects.filter(category_id=self.request.GET.get('category_id'))
+        elif self.request.GET.get('user_id'):
+            return Article.objects.filter(created_by=self.request.GET.get('user_id'))
+        elif self.request.GET.get('id'):
+            return Article.objects.filter(id=self.request.GET.get('id'))
         else:
             return Article.objects.all()
-
     
+    def create(self, request):
+        if request.jwt_user is None:                                              # Not signed in
+            return Response({"status": 401, "message": "Unauthorized"}, status=401)
+        
+
+
+

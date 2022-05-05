@@ -6,7 +6,7 @@ from .views import (
     UserLoginAPI,
     UserRegisterAPI,
     UserEditAPI, 
-    CategoryViewAPI,
+    CategoryViewSet,
     ArticleViewSet,
 )
 
@@ -14,6 +14,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'articles', ArticleViewSet, basename='articles')
+router.register(r'categories', CategoryViewSet, basename='categories')
 
 
 
@@ -23,6 +24,5 @@ urlpatterns = [
     path('auth-login', UserLoginAPI.as_view(), name='users'),           # Login existing user
     path('users/me', UserMeAPI.as_view(), name='users'),                # Private Personal User data
     path('users/edit', UserEditAPI.as_view(), name='users'),            # Edit Personal user data
-    path('categories/', CategoryViewAPI.as_view(), name='categories'),  # Public Category data
     path('', include(router.urls)),
 ]

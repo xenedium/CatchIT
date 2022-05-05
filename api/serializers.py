@@ -69,32 +69,27 @@ class UserSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=50, required=True)
-    created_by = serializers.IntegerField(required=True)
+    created_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=True, write_only=True)
 
     def create(self, validated_data):
         if Category.objects.filter(name=validated_data['name']).exists():
             raise serializers.ValidationError({"status": 400, "message": "Category with this name already exists"})
-        try:
-            user = User.objects.get(id=validated_data['created_by'])
-        except Exception as e:
-            raise serializers.ValidationError({"status": 500, "message": "Internal server error"}, code=500)
 
-        if user.is_admin:
+        if validated_data['created_by'].is_admin:
             try:
                 return Category.objects.create(
                     name=validated_data['name'],
-                    created_by=user
+                    created_by=validated_data['created_by']
                 )
             except Exception as e:
                 raise serializers.ValidationError({"status": 500, "message": "Internal server error"}, code=500)
 
         raise serializers.ValidationError({"status": 403, "message": "Forbidden"}, code=403)
-       
+
 
     class Meta:
         model = Category
         exclude = ('created_at', )
-        write_only_fields = ('created_by', )
 
 
 class ArticleSerializer(serializers.ModelSerializer):

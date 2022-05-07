@@ -1,28 +1,22 @@
 from django.urls import include, path, re_path
 
 from .views import (
-    UserViewAPI,
-    UserMeAPI,
     UserLoginAPI,
-    UserRegisterAPI,
-    UserEditAPI, 
     CategoryViewSet,
     ArticleViewSet,
+    UserViewSet
 )
 
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register(r'articles', ArticleViewSet, basename='articles')
-router.register(r'categories', CategoryViewSet, basename='categories')
+router.register(r'articles', ArticleViewSet, basename='articles')       # Get articles by category, id, name, city, user_id & create new articles
+router.register(r'categories', CategoryViewSet, basename='categories')  # Get all categories or by id & create new category (admin only)
+router.register(r'users', UserViewSet, basename='users')                # Get user data & register user
 
 
 
 urlpatterns = [
-    path('users/', UserViewAPI.as_view(), name='users'),                # Public user data
-    path('auth-register', UserRegisterAPI.as_view(), name='users'),     # Register new user
     path('auth-login', UserLoginAPI.as_view(), name='users'),           # Login existing user
-    path('users/me', UserMeAPI.as_view(), name='users'),                # Private Personal User data
-    path('users/edit', UserEditAPI.as_view(), name='users'),            # Edit Personal user data
     path('', include(router.urls)),
 ]

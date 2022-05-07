@@ -29,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
     lastname = serializers.CharField(max_length=50, required=True)
     email = serializers.EmailField(max_length=254, required=True)
     phone_number = serializers.CharField(max_length=15, required=True)
-    password = serializers.CharField(max_length=64, required=True)
+    password = serializers.CharField(max_length=64, required=True, write_only=True)
     city = serializers.ChoiceField(choices=city_choices, required=True)
 
     def create(self, validated_data):
@@ -53,18 +53,20 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         if 'password' in validated_data:
             instance.password = hashlib.sha256(validated_data['password'].encode('utf-8')).hexdigest()
-        instance.firstname = validated_data['firstname']
-        instance.lastname = validated_data['lastname']
-        instance.email = validated_data['email']
-        instance.phone_number = validated_data['phone_number']
-        instance.city = validated_data['city']
+        if 'firstname' in validated_data:
+            instance.firstname = validated_data['firstname']
+        if 'lastname' in validated_data:
+            instance.lastname = validated_data['lastname']
+        # instance.email = validated_data['email']                  email and phone number are not updatable for now
+        # instance.phone_number = validated_data['phone_number']
+        if 'city' in validated_data:
+            instance.city = validated_data['city']
         instance.save()
         return instance
 
     class Meta:
         model = User
         exclude = ('is_admin', 'is_superuser', 'is_banned', 'created_at')
-        write_only_fields = ('password',)
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -86,6 +88,10 @@ class CategorySerializer(serializers.ModelSerializer):
 
         raise serializers.ValidationError({"status": 403, "message": "Forbidden"}, code=403)
 
+    def update(self, instance, validated_data):
+        instance.name = validated_data['name']
+        instance.save()
+        return instance
 
     class Meta:
         model = Category

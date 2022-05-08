@@ -1,3 +1,4 @@
+from functools import partial
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -10,35 +11,43 @@ from config.settings import SECRET_KEY
 import hashlib, datetime
 
 
-class UserViewAPI(APIView):                 # Get public user info TODO: ADD NOT FOUND
-    def get(self, request):
-        if request.GET.get('id'):
-            users = User.objects.get(id=request.GET.get('id')[0])
-            serializer = UserSerializer(users, many=False)
-            return Response({
-                "id": serializer.data['id'],
-                "firstname": serializer.data['firstname'],
-                "email": serializer.data['email'],
-                "phone_number": serializer.data['phone_number'],
-            })
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        if self.request.GET.get('id'):
+            return User.objects.filter(id=self.request.GET.get('id'))
         else:
+            return None
+
+    def list(self, request, *args, **kwargs):
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        if queryset is None:
             return Response({"status": 400, "message": "Bad request"}, status=400)
+        elif queryset.count() == 0:
+            return Response({"status": 404, "message": "Not found"}, status=404)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
-class UserMeAPI(APIView):                   # Get current and private user info
-    def get(self, request):
-        if request.jwt_user:
-            users = User.objects.get(id=request.jwt_user['id'])
-            serializer = UserSerializer(users, many=False)
-            return Response({
-                "id": serializer.data['id'],
-                "firstname": serializer.data['firstname'],
-                "lastname": serializer.data['lastname'],
-                "email": serializer.data['email'],
-                "phone_number": serializer.data['phone_number'],
-            })
-        else:
-            return Response({"status": 401, "message": "Unauthorized"}, status=401)
+    def create(self, request, *args, **kwargs):
+        if request.jwt_user:        # If user is logged in, edit his profile
+            serializer = self.get_serializer(data=request.data, instance=User.objects.get(id=request.jwt_user['id']), partial=True)
+        else:                       # If user is not logged in, create new user
+            serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=201, headers=headers)
 
 
 class UserLoginAPI(APIView):                # Login user
@@ -55,6 +64,7 @@ class UserLoginAPI(APIView):                # Login user
                             "lastname": user.lastname,
                             "email": user.email,
                             "phone_number": user.phone_number,
+                            "is_admin": user.is_admin,
                             "exp": datetime.datetime.now() + datetime.timedelta(seconds=3600)
                         }
                         , SECRET_KEY, algorithm='HS256')}, status=200)
@@ -64,26 +74,70 @@ class UserLoginAPI(APIView):                # Login user
             return Response({"status": 401, "message": "Invalid email or password"}, status=401)
 
 
-class UserRegisterAPI(APIView):             # Register user
-    
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"status": 200, "message": "User registered successfully"}, status=200)
+
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get_queryset(self):
+        if self.request.GET.get('id'):
+            return Category.objects.filter(id=self.request.GET.get('id'))
         else:
-            return Response({"status": 400, "message": "Bad request"}, status=400)
+            return Category.objects.all()
 
-
-class UserEditAPI(APIView):                 # Edit user info
-    def put(self, request):
-        if request.jwt_user:
-            user = User.objects.get(id=request.jwt_user['id'])
-            serializer = UserSerializer(user, data=request.data, partial=True)
+    def create(self, request):
+        if (request.jwt_user and request.jwt_user['is_admin'] == True):
+            if request.GET.get('id'):       # if id is provided, edit category
+                serializer = self.get_serializer(data={'name': request.data['name'], 'created_by': request.jwt_user['id']}, instance=Category.objects.get(id=request.GET.get('id')), partial=True)
+            else:                           # if id is not provided, create new category
+                serializer = CategorySerializer(data={'name': request.data['name'], 'created_by': request.jwt_user['id']})
             if serializer.is_valid():
                 serializer.save()
-                return Response({"status": 200, "message": "User updated successfully"}, status=200)
+                return Response({"status": 200, "message": "Category created successfully"}, status=200)
             else:
                 return Response({"status": 400, "message": "Bad request"}, status=400)
         else:
             return Response({"status": 401, "message": "Unauthorized"}, status=401)
+
+
+class ArticleViewSet(viewsets.ModelViewSet):    # TODO: Add create, edit, delete
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+
+    def get_queryset(self):
+        if self.request.GET.get('category_id'):
+            return Article.objects.filter(category_id=self.request.GET.get('category_id'))
+        elif self.request.GET.get('user_id'):
+            return Article.objects.filter(created_by=self.request.GET.get('user_id'))
+        elif self.request.GET.get('id'):
+            return Article.objects.filter(id=self.request.GET.get('id'))
+        elif self.request.GET.get('title'):
+            return Article.objects.filter(title__icontains=self.request.GET.get('title'))
+
+    def list(self, request, *args, **kwargs):
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        if queryset is None:
+            return Response({"status": 400, "message": "Bad request"}, status=400)
+        elif queryset.count() == 0:
+            return Response({"status": 404, "message": "Not found"}, status=404)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
+
+    def create(self, request):
+        if request.jwt_user is None:                                              # Not signed in
+            return Response({"status": 401, "message": "Unauthorized"}, status=401)
+        
+
+
+

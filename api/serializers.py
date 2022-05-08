@@ -2,14 +2,35 @@ from rest_framework import serializers
 from .models import User, Category, Article
 import hashlib
 
+city_choices = [
+    ('Casablanca', 'Casablanca'),
+    ('Rabat', 'Rabat'),
+    ('Marrakech', 'Marrakech'),
+    ('Fes', 'Fes'),
+    ('Tanger', 'Tanger'),
+    ('Oujda', 'Oujda'),
+    ('Agadir', 'Agadir'),
+    ('Tetouan', 'Tetouan'),
+    ('Meknes', 'Meknes'),
+    ('Safi', 'Safi'),
+    ('El Jadida', 'El Jadida'),
+    ('Khouribga', 'Khouribga'),
+    ('Ouarzazate', 'Ouarzazate'),
+    ('Settat', 'Settat'),
+    ('Sidi Kacem', 'Sidi Kacem'),
+    ('Kenitra', 'Kenitra'),
+    ('Taza', 'Taza'),
+    ('Tiznit', 'Tiznit'),
+    ('Sidi Ifni', 'Sidi Ifni')
+]
 
 class UserSerializer(serializers.ModelSerializer):
     firstname = serializers.CharField(max_length=50, required=True)
     lastname = serializers.CharField(max_length=50, required=True)
     email = serializers.EmailField(max_length=254, required=True)
     phone_number = serializers.CharField(max_length=15, required=True)
-    password = serializers.CharField(max_length=64, required=True)
-    city = serializers.CharField(max_length=50, required=True)
+    password = serializers.CharField(max_length=64, required=True, write_only=True)
+    city = serializers.ChoiceField(choices=city_choices, required=True)
 
     def create(self, validated_data):
         if User.objects.filter(email=validated_data['email']).exists():
@@ -23,7 +44,8 @@ class UserSerializer(serializers.ModelSerializer):
                         lastname=validated_data['lastname'], 
                         email=validated_data['email'], 
                         phone_number=validated_data['phone_number'], 
-                        password=hashlib.sha256(validated_data['password'].encode('utf-8')).hexdigest()
+                        password=hashlib.sha256(validated_data['password'].encode('utf-8')).hexdigest(),
+                        city=validated_data['city']
                     )
         except Exception as e:
             raise serializers.ValidationError({"status": 500, "message": "Internal server error"})
@@ -31,34 +53,49 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         if 'password' in validated_data:
             instance.password = hashlib.sha256(validated_data['password'].encode('utf-8')).hexdigest()
-        instance.firstname = validated_data['firstname']
-        instance.lastname = validated_data['lastname']
-        instance.email = validated_data['email']
-        instance.phone_number = validated_data['phone_number']
+        if 'firstname' in validated_data:
+            instance.firstname = validated_data['firstname']
+        if 'lastname' in validated_data:
+            instance.lastname = validated_data['lastname']
+        # instance.email = validated_data['email']                  email and phone number are not updatable for now
+        # instance.phone_number = validated_data['phone_number']
+        if 'city' in validated_data:
+            instance.city = validated_data['city']
         instance.save()
         return instance
 
     class Meta:
         model = User
         exclude = ('is_admin', 'is_superuser', 'is_banned', 'created_at')
-        write_only_fields = ('password',)
 
 
 class CategorySerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=50, required=True)
-    created_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=True)
+    created_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=True, write_only=True)
 
     def create(self, validated_data):
         if Category.objects.filter(name=validated_data['name']).exists():
             raise serializers.ValidationError({"status": 400, "message": "Category with this name already exists"})
-        try:
-            return Category.objects.create(**validated_data)
-        except Exception as e:
-            raise serializers.ValidationError({"status": 500, "message": "Internal server error"})
+
+        if validated_data['created_by'].is_admin:
+            try:
+                return Category.objects.create(
+                    name=validated_data['name'],
+                    created_by=validated_data['created_by']
+                )
+            except Exception as e:
+                raise serializers.ValidationError({"status": 500, "message": "Internal server error"}, code=500)
+
+        raise serializers.ValidationError({"status": 403, "message": "Forbidden"}, code=403)
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data['name']
+        instance.save()
+        return instance
 
     class Meta:
         model = Category
-        exclude = ('created_at',)
+        exclude = ('created_at', )
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -69,14 +106,14 @@ class ArticleSerializer(serializers.ModelSerializer):
     condition = serializers.ChoiceField(choices=['New', 'Used'], required=True)
     price = serializers.DecimalField(max_digits=10, decimal_places=2, required=True)
     quantity = serializers.IntegerField(required=True)
-    is_sold = serializers.BooleanField(default=False)
-    city = serializers.CharField(max_length=50, required=True)
+    is_sold = serializers.BooleanField(default=False, required=False)
+    city = serializers.ChoiceField(required=True, choices=city_choices)
 
     def create(self, validated_data):
         try:
             return Article.objects.create(**validated_data)
         except Exception as e:
-            raise serializers.ValidationError({"status": 500, "message": "Internal server error", "error": str(e)})
+            raise serializers.ValidationError({"status": 500, "message": "Internal server error"})
     
     class Meta:
         model = Article

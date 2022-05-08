@@ -3,12 +3,34 @@ from django.db import models
 
 # Create your models here.
 
+city_choices = [
+    ('Casablanca', 'Casablanca'),
+    ('Rabat', 'Rabat'),
+    ('Marrakech', 'Marrakech'),
+    ('Fes', 'Fes'),
+    ('Tanger', 'Tanger'),
+    ('Oujda', 'Oujda'),
+    ('Agadir', 'Agadir'),
+    ('Tetouan', 'Tetouan'),
+    ('Meknes', 'Meknes'),
+    ('Safi', 'Safi'),
+    ('El Jadida', 'El Jadida'),
+    ('Khouribga', 'Khouribga'),
+    ('Ouarzazate', 'Ouarzazate'),
+    ('Settat', 'Settat'),
+    ('Sidi Kacem', 'Sidi Kacem'),
+    ('Kenitra', 'Kenitra'),
+    ('Taza', 'Taza'),
+    ('Tiznit', 'Tiznit'),
+    ('Sidi Ifni', 'Sidi Ifni')
+]
+
 class User(models.Model):
     firstname = models.CharField(max_length=50, null=False, editable=True)
     lastname = models.CharField(max_length=50, null=False, editable=True)
     email = models.EmailField(max_length=254, null=False, unique=True, editable=False)
     phone_number = models.CharField(max_length=15, null=False, unique=True, editable=False)
-    city = models.CharField(max_length=50, null=False, editable=True)
+    city = models.CharField(max_length=50, null=False, editable=True, choices=city_choices)
     password = models.CharField(max_length=64, null=False, editable=True)
     created_at = models.DateTimeField(auto_now_add=True, null=False, editable=False)
     is_admin = models.BooleanField(default=False, null=False)
@@ -39,7 +61,7 @@ class Article(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=False, editable=True)
     quantity = models.IntegerField(default=1, null=False, editable=True)
     is_sold = models.BooleanField(default=False, null=False, editable=True)
-    city = models.CharField(max_length=50, null=False, editable=True)
+    city = models.CharField(max_length=50, null=False, editable=True, choices=city_choices)
 
     def __str__(self):
         return self.title

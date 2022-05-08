@@ -40,9 +40,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
     def create(self, request, *args, **kwargs):
-        if request.jwt_user:
+        if request.jwt_user:        # If user is logged in, edit his profile
             serializer = self.get_serializer(data=request.data, instance=User.objects.get(id=request.jwt_user['id']), partial=True)
-        else: 
+        else:                       # If user is not logged in, create new user
             serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -89,9 +89,9 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         if (request.jwt_user and request.jwt_user['is_admin'] == True):
-            if request.GET.get('id'):
+            if request.GET.get('id'):       # if id is provided, edit category
                 serializer = self.get_serializer(data={'name': request.data['name'], 'created_by': request.jwt_user['id']}, instance=Category.objects.get(id=request.GET.get('id')), partial=True)
-            else:
+            else:                           # if id is not provided, create new category
                 serializer = CategorySerializer(data={'name': request.data['name'], 'created_by': request.jwt_user['id']})
             if serializer.is_valid():
                 serializer.save()
@@ -113,8 +113,8 @@ class ArticleViewSet(viewsets.ModelViewSet):    # TODO: Add create, edit, delete
             return Article.objects.filter(created_by=self.request.GET.get('user_id'))
         elif self.request.GET.get('id'):
             return Article.objects.filter(id=self.request.GET.get('id'))
-        else:
-            return None
+        elif self.request.GET.get('title'):
+            return Article.objects.filter(title__icontains=self.request.GET.get('title'))
 
     def list(self, request, *args, **kwargs):
 

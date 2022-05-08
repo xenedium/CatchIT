@@ -106,7 +106,7 @@ class ArticleSerializer(serializers.ModelSerializer):
     condition = serializers.ChoiceField(choices=['New', 'Used'], required=True)
     price = serializers.DecimalField(max_digits=10, decimal_places=2, required=True)
     quantity = serializers.IntegerField(required=True)
-    is_sold = serializers.BooleanField(default=False, read_only=True)
+    is_sold = serializers.BooleanField(default=False, required=False)
     city = serializers.ChoiceField(required=True, choices=city_choices)
 
     def create(self, validated_data):

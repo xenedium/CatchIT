@@ -27,4 +27,4 @@
 |```/api/categories/```|GET|id: the id of the category (Optional)|Returns a category name if the id is provided, if not will return all the registrated categories|
 |```/api/categories/```|POST|name (Required)|Will create a new category. Note that this route is secured and a JWT (with admin privileges) needs to be provided in the headers section, will throw a forbidden (403) if the user requesting is not an admin |
 |```/api/articles/```|GET|id, title, user_id, category_id (One of them is required)|Returns one or more article depending on the query, one of the params is REQUIRED if more than one is provided, only one will be taken into consideration, more filtering must be done client side.|
-|```/api/articles```|POST|Not yet implemented|Not yet implemented|
+|```/api/articles```|POST|title, description, category, seller, condition, price, quantity, city|Will create an article if all of the fields are provided or edit an article if the id is provided (Body), returns a Bad Request (400) if one of the required fields is missing, or an Unauthorized (403) if no JWT is provided|

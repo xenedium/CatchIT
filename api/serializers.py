@@ -115,6 +115,27 @@ class ArticleSerializer(serializers.ModelSerializer):
         except Exception as e:
             raise serializers.ValidationError({"status": 500, "message": "Internal server error"})
     
+    def update(self, instance, validated_data):
+        print('validated_data', validated_data)
+        if 'title' in validated_data:
+            instance.title = validated_data['title']
+        if 'description' in validated_data:
+            instance.description = validated_data['description']
+        if 'category' in validated_data:
+            instance.category = validated_data['category']
+        if 'condition' in validated_data:
+            instance.condition = validated_data['condition']
+        if 'price' in validated_data:
+            instance.price = validated_data['price']
+        if 'quantity' in validated_data:
+            instance.quantity = validated_data['quantity']
+        if 'is_sold' in validated_data:
+            instance.is_sold = validated_data['is_sold']
+        if 'city' in validated_data:
+            instance.city = validated_data['city']
+        instance.save()
+        return instance
+
     class Meta:
         model = Article
         exclude = ('created_at', 'updated_at')

@@ -1,4 +1,5 @@
 from functools import partial
+from urllib import request
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -64,6 +65,7 @@ class UserLoginAPI(APIView):                # Login user
                             "lastname": user.lastname,
                             "email": user.email,
                             "phone_number": user.phone_number,
+                            "city": user.city,
                             "is_admin": user.is_admin,
                             "exp": datetime.datetime.now() + datetime.timedelta(seconds=3600)
                         }
@@ -108,13 +110,20 @@ class ArticleViewSet(viewsets.ModelViewSet):    # TODO: Add create, edit, delete
 
     def get_queryset(self):
         if self.request.GET.get('category_id'):
-            return Article.objects.filter(category_id=self.request.GET.get('category_id'))
-        elif self.request.GET.get('user_id'):
-            return Article.objects.filter(created_by=self.request.GET.get('user_id'))
+            return Article.objects.filter(category_id=self.request.GET.get('category_id'), is_sold=False)
+        elif self.request.GET.get('seller'):
+            if self.request.jwt_user:
+                if self.request.jwt_user['id'] == int(self.request.GET.get('seller')):
+                    return Article.objects.filter(seller=self.request.GET.get('seller'))
+            return Article.objects.filter(seller=self.request.GET.get('seller'), is_sold=False)
         elif self.request.GET.get('id'):
-            return Article.objects.filter(id=self.request.GET.get('id'))
+            return Article.objects.filter(id=self.request.GET.get('id'), is_sold=False)
         elif self.request.GET.get('title'):
-            return Article.objects.filter(title__icontains=self.request.GET.get('title'))
+            return Article.objects.filter(title__icontains=self.request.GET.get('title'), is_sold=False)
+        elif self.request.GET.get('city'):
+            return Article.objects.filter(city=self.request.GET.get('city'), is_sold=False)
+        else:
+            return None
 
     def list(self, request, *args, **kwargs):
 
@@ -123,7 +132,7 @@ class ArticleViewSet(viewsets.ModelViewSet):    # TODO: Add create, edit, delete
         if queryset is None:
             return Response({"status": 400, "message": "Bad request"}, status=400)
         elif queryset.count() == 0:
-            return Response({"status": 404, "message": "Not found"}, status=404)
+            return Response({"status": 404, "message": "Not found"}, status=404)        # Not found or sold
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -132,11 +141,20 @@ class ArticleViewSet(viewsets.ModelViewSet):    # TODO: Add create, edit, delete
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-    
 
     def create(self, request):
         if request.jwt_user is None:                                              # Not signed in
             return Response({"status": 401, "message": "Unauthorized"}, status=401)
+        if request.data['id']:    
+            if Article.objects.get(id=request.data['id'], seller=request.jwt_user['id']) is None:   # User editing his own article
+                return Response({"status": 403, "message": "Forbidden"}, status=403)
+            serializer = self.get_serializer(data=request.data, instance=Article.objects.get(id=request.data['id']), partial=True)
+        else:
+            serializer = self.get_serializer(data={'title': request.data['title'], 'description': request.data['description'], 'category': request.data['category'], 'seller': request.jwt_user['id'], 'condition': request.data['condition'], 'price': request.data['price'], 'quantity': request.data['quantity'], 'city': request.data['city']})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": 200, "message": "Article created or updated successfully"}, status=200)
+        return Response({"status": 400, "message": "Bad request"}, status=400)
         
 
 

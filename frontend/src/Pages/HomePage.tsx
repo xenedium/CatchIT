@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { HeaderResponsive, FooterLinks, LeadGrid } from '../Components/Home'
 import { ReactComponent as HomeWaves } from '../Assets/Svgs/HomeWaves.svg'
-import { useNavigate } from 'react-router-dom'
 
 const headerLinks = [
     {

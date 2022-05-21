@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-from re import TEMPLATE
 from environ import Env
 
 env = Env()
@@ -37,7 +36,7 @@ ALLOWED_HOSTS = ["*"]
 SECURE_HSTS_SECONDS = 2_592_000
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
-SECURE_SSL_REDIRECT = DEBUG is False
+SECURE_SSL_REDIRECT = not DEBUG
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 

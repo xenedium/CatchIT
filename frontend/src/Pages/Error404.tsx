@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStyles, Title, Text, Button, Container, Group } from '@mantine/core';
 import { Link } from 'react-router-dom';
+import { ReactComponent as WaveSvg } from '../Assets/Svgs/404wave.svg';
 
 
 const useStyles = createStyles((theme) => ({
@@ -15,7 +16,7 @@ const useStyles = createStyles((theme) => ({
         fontSize: 220,
         lineHeight: 1,
         marginBottom: theme.spacing.xl * 1.5,
-        color: theme.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[2],
+        color: theme.colors.dark[4],
 
         [theme.fn.smallerThan('sm')]: {
             fontSize: 120,
@@ -46,6 +47,7 @@ export default function Error404() {
 
     return (
         <>
+            <WaveSvg style={{position: "absolute", bottom: "-100px"}} />
             <Container className={classes.root}>
                 <div className={classes.label}>404</div>
                 <Title className={classes.title}>You have found a secret place.</Title>

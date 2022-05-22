@@ -14,6 +14,7 @@ DISABLE_LINTERS:
   - "YAML_YAMLLINT"
   - "ACTION_ACTIONLINT"
   - "MARKDOWN_MARKDOWN_LINK_CHECK"
+  - "CSS_SCSS_LINT"
 DISABLE:
   - COPYPASTE # Comment to enable checks of excessive copy-pastes
   - SPELL # Comment to enable checks of spelling mistakes

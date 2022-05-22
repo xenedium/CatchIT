@@ -1,6 +1,6 @@
 import React from 'react'
 import { HeaderResponsive, FooterLinks, LeadGrid } from '../Components/Home'
-import { ReactComponent as HomeWaves } from '../Assets/Svgs/HomeWaves.svg'
+// import { ReactComponent as HomeWaves } from '../Assets/Svgs/HomeWaves.svg'
 
 const headerLinks = [
     {
@@ -94,7 +94,6 @@ export default function HomePage() {
         <>
             <HeaderResponsive links={headerLinks}/>
             <LeadGrid />
-            <HomeWaves />
             <FooterLinks data={ footerLinks } />
         </>
 

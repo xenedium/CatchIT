@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { Route, BrowserRouter, Routes } from 'react-router-dom';
 
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './Scss/custom.scss';
 
 import HomePage from './Pages/HomePage';
 import Error404 from './Pages/Error404';

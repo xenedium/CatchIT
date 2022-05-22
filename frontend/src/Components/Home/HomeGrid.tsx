@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Grid, SimpleGrid, Skeleton, useMantineTheme, Title, Checkbox, Space } from '@mantine/core';
+// @ts-ignore
 import Typist from 'react-typist'
 
 const PRIMARY_COL_HEIGHT = 300;

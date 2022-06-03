@@ -16,7 +16,7 @@
 - ### For each commit in this repository (or internal pull request) the commited code will pass through a linter then some tests to see if the code can be safely deployed.
 - ### If the linter and test workflow succeeds the code will go into production and will automatically be deployed to heroku.
 - ### For commits in side branchs, only the linter and build process will be run.
-- ### This project supports image uploading, but since Heroku blocks FileSystem Syscalls, image uploading won't work in the Heroku deployed app. Fixing this issue is pretty easy, it requires a storage server like Amazon s3 or an integrated Heroku Add-on ( Bucketter ), but since they are paid options and this is only a school project I won't be using them.
+- ### This project supports image uploading, but since Heroku blocks FileSystem Syscalls, image uploading won't work in the Heroku deployed app. Fixing this issue is pretty easy, it requires a storage server like Amazon s3 or an integrated Heroku Add-on ( Bucketeer ), but since they are paid options and this is only a school project I won't be using them.
 
 # API routes documentation:
 

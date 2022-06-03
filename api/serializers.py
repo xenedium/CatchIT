@@ -113,7 +113,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         try:
             return Article.objects.create(**validated_data)
         except Exception as e:
-            raise serializers.ValidationError({"status": 500, "message": "Internal server error"})
+            raise serializers.ValidationError({"status": 500, "message": "Internal server error", "error": str(e)})
     
     def update(self, instance, validated_data):
         print('validated_data', validated_data)

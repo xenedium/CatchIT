@@ -145,15 +145,15 @@ class ArticleViewSet(viewsets.ModelViewSet):    # TODO: Add create, edit, delete
     def create(self, request):
         if request.jwt_user is None:                                              # Not signed in
             return Response({"status": 401, "message": "Unauthorized"}, status=401)
-        if request.data['id']:    
+        if 'id' in request.data:    
             if Article.objects.get(id=request.data['id'], seller=request.jwt_user['id']) is None:   # User editing his own article
                 return Response({"status": 403, "message": "Forbidden"}, status=403)
             serializer = self.get_serializer(data=request.data, instance=Article.objects.get(id=request.data['id']), partial=True)
         else:
-            serializer = self.get_serializer(data={'title': request.data['title'], 'description': request.data['description'], 'category': request.data['category'], 'seller': request.jwt_user['id'], 'condition': request.data['condition'], 'price': request.data['price'], 'quantity': request.data['quantity'], 'city': request.data['city']})
+            serializer = self.get_serializer(data={'title': request.data['title'], 'description': request.data['description'], 'category': request.data['category'], 'seller': request.jwt_user['id'], 'condition': request.data['condition'], 'price': request.data['price'], 'quantity': request.data['quantity'], 'city': request.data['city'], 'image': request.data['image'] if 'image' in request.data else None})
         if serializer.is_valid():
             serializer.save()
-            return Response({"status": 200, "message": "Article created or updated successfully"}, status=200)
+            return Response({"status": 200, "message": "Article created or updated successfully", "article": serializer.data}, status=200)
         return Response({"status": 400, "message": "Bad request"}, status=400)
         
 

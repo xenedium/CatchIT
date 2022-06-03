@@ -52,6 +52,7 @@ class Category(models.Model):
 
 class Article(models.Model):
     title = models.CharField(max_length=50, null=False, editable=True)
+    image = models.ImageField(upload_to='static/images/', null=True, editable=True)
     description = models.TextField(null=False, editable=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=False, editable=False)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, null=False, editable=False)

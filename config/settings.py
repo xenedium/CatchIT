@@ -12,10 +12,19 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from environ import Env
+from boto3 import Session   # Storage server for image uploading
 
 env = Env()
 
 Env.read_env()
+
+boto3_session = Session()               # Storage server to allow image uploading
+boto3_client = boto3_session.client('s3',
+                                    region_name='fra1',
+                                    endpoint_url='https://fra1.digitaloceanspaces.com',
+                                    aws_access_key_id=env('AWS_ACCESS_KEY_ID'),
+                                    aws_secret_access_key=env('AWS_SECRET_ACCESS_KEY'))
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

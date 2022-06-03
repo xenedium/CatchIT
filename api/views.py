@@ -8,6 +8,9 @@ from .serializers import UserSerializer, CategorySerializer, ArticleSerializer
 from .models import User, Category, Article
 from jwt import encode
 from config.settings import SECRET_KEY
+from requests import post
+from config.settings import boto3_client
+from time import time
 
 import hashlib, datetime
 
@@ -94,7 +97,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
             if request.GET.get('id'):       # if id is provided, edit category
                 serializer = self.get_serializer(data={'name': request.data['name'], 'created_by': request.jwt_user['id']}, instance=Category.objects.get(id=request.GET.get('id')), partial=True)
             else:                           # if id is not provided, create new category
-                serializer = CategorySerializer(data={'name': request.data['name'], 'created_by': request.jwt_user['id']})
+                serializer = CategorySerializer(data={'name': request.data['name'],'image': request.data['image'] if 'image' in request.data else None , 'created_by': request.jwt_user['id']})
             if serializer.is_valid():
                 serializer.save()
                 return Response({"status": 200, "message": "Category created successfully"}, status=200)
@@ -145,6 +148,8 @@ class ArticleViewSet(viewsets.ModelViewSet):    # TODO: Add create, edit, delete
     def create(self, request):
         if request.jwt_user is None:                                              # Not signed in
             return Response({"status": 401, "message": "Unauthorized"}, status=401)
+        if 'image' in request.data:
+            request.data['image'].name = f"{time()}.{request.data['image'].name}"   # Unique name for each image
         if 'id' in request.data:    
             if Article.objects.get(id=request.data['id'], seller=request.jwt_user['id']) is None:   # User editing his own article
                 return Response({"status": 403, "message": "Forbidden"}, status=403)
@@ -153,6 +158,14 @@ class ArticleViewSet(viewsets.ModelViewSet):    # TODO: Add create, edit, delete
             serializer = self.get_serializer(data={'title': request.data['title'], 'description': request.data['description'], 'category': request.data['category'], 'seller': request.jwt_user['id'], 'condition': request.data['condition'], 'price': request.data['price'], 'quantity': request.data['quantity'], 'city': request.data['city'], 'image': request.data['image'] if 'image' in request.data else None})
         if serializer.is_valid():
             serializer.save()
+            request.data['image'].file.seek(0)  # Reset the file pointer since it was consumed by the serializer
+            if 'image' in request.data:         # Upload to aws storage server
+                boto3_client.put_object(
+                    Bucket='catchit',
+                    Key=request.data['image'].name,
+                    Body=request.data['image'].file,
+                    ACL='public-read'
+                )
             return Response({"status": 200, "message": "Article created or updated successfully", "article": serializer.data}, status=200)
         return Response({"status": 400, "message": "Bad request"}, status=400)
         

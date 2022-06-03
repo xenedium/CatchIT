@@ -1,3 +1,4 @@
+from email.mime import image
 from random import choices
 from django.db import models
 
@@ -43,6 +44,7 @@ class User(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True, editable=False)
+    image = models.ImageField(upload_to='categories/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=False, editable=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, editable=False)
 
@@ -52,7 +54,7 @@ class Category(models.Model):
 
 class Article(models.Model):
     title = models.CharField(max_length=50, null=False, editable=True)
-    image = models.ImageField(upload_to='static/images/', null=True, editable=True)
+    image = models.ImageField(upload_to='articles/', null=True, editable=True)
     description = models.TextField(null=False, editable=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=False, editable=False)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, null=False, editable=False)

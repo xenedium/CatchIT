@@ -13,6 +13,8 @@ whitenoise = "*"
 pillow = "*"
 drf-api-logger = "*"
 pyjwt = "*"
+requests = "*"
+boto3 = "*"
 
 [dev-packages]
 

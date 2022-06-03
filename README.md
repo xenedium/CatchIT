@@ -16,6 +16,7 @@
 - ### For each commit in this repository (or internal pull request) the commited code will pass through a linter then some tests to see if the code can be safely deployed.
 - ### If the linter and test workflow succeeds the code will go into production and will automatically be deployed to heroku.
 - ### For commits in side branchs, only the linter and build process will be run.
+- ### This project supports image uploading, but since Heroku blocks FileSystem Syscalls, image uploading won't work in the Heroku deployed app. Fixing this issue is pretty easy, it requires a storage server like Amazon s3 or an integrated Heroku Add-on ( Bucketter ), but since they are paid options and this is only a school project I won't be using them.
 
 # API routes documentation:
 
@@ -27,4 +28,4 @@
 |```/api/categories/```|GET|id: the id of the category (Optional)|Returns a category name if the id is provided, if not will return all the registrated categories|
 |```/api/categories/```|POST|name (Required)|Will create a new category. Note that this route is secured and a JWT (with admin privileges) needs to be provided in the headers section, will throw a forbidden (403) if the user requesting is not an admin |
 |```/api/articles/```|GET|id, title, user_id, category_id (One of them is required)|Returns one or more article depending on the query, one of the params is REQUIRED if more than one is provided, only one will be taken into consideration, more filtering must be done client side.|
-|```/api/articles```|POST|title, description, category, seller, condition, price, quantity, city|Will create an article if all of the fields are provided or edit an article if the id is provided (Body), returns a Bad Request (400) if one of the required fields is missing, or an Unauthorized (403) if no JWT is provided|
+|```/api/articles```|POST|title, description, category, seller, condition, price, quantity, city, image (optional)|Will create an article if all of the fields are provided or edit an article if the id is provided (Body), returns a Bad Request (400) if one of the required fields is missing, or an Unauthorized (403) if no JWT is provided|

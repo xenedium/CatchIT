@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { Container, Grid, SimpleGrid, Skeleton, useMantineTheme, Title, Checkbox, Space } from '@mantine/core';
-// @ts-ignore
-import Typist from 'react-typist'
 
 const PRIMARY_COL_HEIGHT = 300;
 
@@ -13,18 +11,18 @@ export function LeadGrid() {
   return (
     <Container my="md">
       <SimpleGrid cols={2} spacing="md" breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
-        <Typist cursor={{ show: false }} avgTypingDelay={40}>
+        
           <Title order={1} style={{ marginTop: 10 }} >
             Hello there !
             <Space h="md" />
-            <Typist.Delay ms={1000} />
+            
             It looks like you are new here.
             <Space h="md" />
-            <Typist.Delay ms={1000} />
+            
             Take time to visit each page.
             <Space h="md" />
           </Title>
-        </Typist>
+        
         <Grid gutter="md">
           <Grid.Col>
             <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" animate={false} />

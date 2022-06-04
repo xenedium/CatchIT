@@ -51,7 +51,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=201, headers=headers)
+        return Response({"status": 201, "data": serializer.data}, status=201, headers=headers)
 
 
 class UserLoginAPI(APIView):                # Login user
@@ -70,7 +70,7 @@ class UserLoginAPI(APIView):                # Login user
                             "phone_number": user.phone_number,
                             "city": user.city,
                             "is_admin": user.is_admin,
-                            "exp": datetime.datetime.now() + datetime.timedelta(seconds=3600)
+                            "exp": datetime.datetime.now() + datetime.timedelta(seconds=7200)
                         }
                         , SECRET_KEY, algorithm='HS256')}, status=200)
             else:

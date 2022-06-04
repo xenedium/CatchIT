@@ -1,153 +1,186 @@
 import React, { useState } from 'react';
-import { createStyles, Header, Container, Group, Burger, Paper, Transition, Image } from '@mantine/core';
+import {
+    createStyles,
+    Container,
+    Avatar,
+    UnstyledButton,
+    Group,
+    Text,
+    Menu,
+    Burger,
+    Image
+} from '@mantine/core';
 import { useBooleanToggle } from '@mantine/hooks';
+import {
+    Logout,
+    Settings,
+    ShoppingCart,
+    ShoppingCartOff,
+    ChevronDown,
+    Heart,
+} from 'tabler-icons-react';
 import CatchItLogo from '../../Assets/Images/CatchItLogo.jpeg'
-import { Link } from 'react-router-dom';
 
-const HEADER_HEIGHT = 60;
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 const useStyles = createStyles((theme) => ({
-    root: {
-        position: 'relative',
-        zIndex: 1,
+    header: {
+        paddingTop: theme.spacing.sm,
+        backgroundColor: theme.colors.dark[6],
+        borderBottom: `1px solid ${theme.colors.dark[6]}`,
+        marginBottom: 120,
     },
 
-    dropdown: {
-        position: 'absolute',
-        top: HEADER_HEIGHT,
-        left: 0,
-        right: 0,
-        zIndex: 0,
-        borderTopRightRadius: 0,
-        borderTopLeftRadius: 0,
-        borderTopWidth: 0,
-        overflow: 'hidden',
+    mainSection: {
+        paddingBottom: theme.spacing.sm,
+    },
 
-        [theme.fn.largerThan('sm')]: {
+    userMenu: {
+        [theme.fn.smallerThan('xs')]: {
             display: 'none',
         },
     },
 
-    header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        height: '100%',
-    },
+    user: {
+        color: theme.white,
+        padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
+        borderRadius: theme.radius.sm,
+        transition: 'background-color 100ms ease',
 
-    links: {
-        [theme.fn.smallerThan('sm')]: {
-            display: 'none',
+        '&:hover': {
+            backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 7 : 5],
         },
     },
 
     burger: {
-        [theme.fn.largerThan('sm')]: {
+        [theme.fn.largerThan('xs')]: {
             display: 'none',
         },
     },
 
-    link: {
-        display: 'block',
-        lineHeight: 1,
-        padding: '8px 12px',
-        borderRadius: theme.radius.sm,
-        textDecoration: 'none',
-        color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
-        fontSize: theme.fontSizes.sm,
-        fontWeight: 500,
+    userActive: {
+        backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 7 : 5],
+    },
 
-        '&:hover': {
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-        },
-
+    tabs: {
         [theme.fn.smallerThan('sm')]: {
-            borderRadius: 0,
-            padding: theme.spacing.md,
+            display: 'none',
         },
     },
 
-    linkActive: {
-        '&, &:hover': {
-            backgroundColor:
-                theme.colorScheme === 'dark'
-                    ? theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.25)
-                    : theme.colors[theme.primaryColor][0],
-            color: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 3 : 7],
+    tabsList: {
+        borderBottom: '0 !important',
+    },
+
+    tabControl: {
+        fontWeight: 500,
+        height: 38,
+        color: `${theme.white} !important`,
+
+        '&:hover': {
+            backgroundColor: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 7 : 5],
         },
+    },
+
+    tabControlActive: {
+        color: `${theme.colorScheme === 'dark' ? theme.white : theme.black} !important`,
+        borderColor: `${theme.colors[theme.primaryColor][6]} !important`,
     },
 }));
 
-interface HeaderResponsiveProps {
-    links: { link: string; label: string }[];
+interface HeaderTabsProps {
+    user: { name: string; image: string };
 }
 
-export function HeaderResponsive({ links }: HeaderResponsiveProps) {
-    const [opened, toggleOpened] = useBooleanToggle(false);
-    const [active, setActive] = useState(links[0].link);
-    const { classes, cx } = useStyles();
+const HandleLogout = (navigate = undefined) => {
+    if (navigate) {
+        //@ts-ignore
+        navigate('/login');
+        return;
+    }
 
-    const items = links.map((link) => (
-        link.label !== 'Github' ?
-        <Link
-            to={{
-                pathname: link.link
-            }}
-            key={link.label}
-            className={cx(classes.link, { [classes.linkActive]: active === link.link })}
-            onClick={(event) => {
-                //event.preventDefault();
-                setActive(link.link);
-                toggleOpened(false);
-            }}
-        >
-            {link.label}
-        </Link>
-        :
-        <a
-            href={link.link}
-            key={link.label}
-            className={cx(classes.link, { [classes.linkActive]: active === link.link })}
-            onClick={(event) => {
-                //event.preventDefault();
-                setActive(link.link);
-                toggleOpened(false);
-            }}
-        >
-            {link.label}
-        </a>
-    ));
+    localStorage.removeItem('token');
+    window.location.reload();
+}
+
+const HandleAccountSettings = (navigate: NavigateFunction) => {
+    navigate('/account/');
+}
+
+const HandleMyAvailableArticles = (navigate: NavigateFunction) => {
+    navigate('/my-articles/?sold=false');
+}
+
+const HandleMySoldArticles = (navigate: NavigateFunction) => {
+    navigate('/my-articles/?sold=true');
+}
+
+const HandleMyFavorites = (navigate: NavigateFunction) => {
+    navigate('/my-favorites');
+}
+
+export function HeaderTabsColored({ user }: HeaderTabsProps) {
+    const navigate = useNavigate();
+    const { classes, theme, cx } = useStyles();
+    const [opened, toggleOpened] = useBooleanToggle(false);
+    const [userMenuOpened, setUserMenuOpened] = useState(false);
+
 
     return (
-        <Header height={HEADER_HEIGHT} mb={120} className={classes.root}>
-            <Container className={classes.header}>
-                <Image
-                    // @ts-ignore
-                    src={CatchItLogo}
-                    alt="CatchIt Logo"
-                    width={120}
-                    
-                />
-                
-                <Group spacing={5} className={classes.links}>
-                    {items}
+        <div className={classes.header}>
+            <Container className={classes.mainSection}>
+                <Group position="apart">
+                    <Image
+                        // @ts-ignore
+                        src={CatchItLogo}
+                        alt="CatchIt Logo"
+                        width={100}
+                    />
+
+                    <Burger
+                        opened={opened}
+                        onClick={() => toggleOpened()}
+                        className={classes.burger}
+                        size="sm"
+                        color={theme.white}
+                    />
+
+                    <Menu
+                        size={260}
+                        placement="end"
+                        transition="pop-top-right"
+                        className={classes.userMenu}
+                        onClose={() => setUserMenuOpened(false)}
+                        onOpen={() => setUserMenuOpened(true)}
+                        control={
+                            <UnstyledButton
+                                className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
+                            >
+                                <Group spacing={7}>
+                                    <Avatar src={user.image} alt={user.name} radius="xl" size={20} />
+                                    <Text weight={500} size="sm" sx={{ lineHeight: 1, color: theme.white }} mr={3}>
+                                        {user.name}
+                                    </Text>
+                                    <ChevronDown size={12} />
+                                </Group>
+                            </UnstyledButton>
+                        }
+                    >
+                        <Menu.Item icon={<Heart size={14} />} onClick={() => HandleMyFavorites(navigate)} > Favorites </Menu.Item>
+
+                        <Menu.Item icon={<ShoppingCart size={14} />} onClick={() => HandleMyAvailableArticles(navigate)} >My Listed Articles</Menu.Item>
+                        <Menu.Item icon={<ShoppingCartOff size={14} />} onClick={() => HandleMySoldArticles(navigate)}>My Sold Articles</Menu.Item>
+
+                        <Menu.Label>Settings</Menu.Label>
+                        <Menu.Item icon={<Settings size={14} />} onClick={() => HandleAccountSettings(navigate)} >Account settings</Menu.Item>
+                        <Menu.Item icon={<Logout size={14} />} onClick={() => {user.name === "Sign In" ? 
+                        //@ts-ignore
+                        HandleLogout(navigate) : HandleLogout()}}>{user.name === "Sign In" ? "Sign In" : "Log Out"}</Menu.Item>
+
+
+                    </Menu>
                 </Group>
-
-                <Burger
-                    opened={opened}
-                    onClick={() => toggleOpened()}
-                    className={classes.burger}
-                    size="sm"
-                />
-
-                <Transition transition="pop-top-right" duration={200} mounted={opened}>
-                    {(styles) => (
-                        <Paper className={classes.dropdown} withBorder style={styles}>
-                            {items}
-                        </Paper>
-                    )}
-                </Transition>
             </Container>
-        </Header>
+        </div>
     );
 }

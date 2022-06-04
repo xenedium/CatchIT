@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStyles, Title, Text, Button, Container, Group } from '@mantine/core';
-import { Link } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { ReactComponent as WaveSvg } from '../Assets/Svgs/404wave.svg';
 
 
@@ -42,9 +42,15 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
+const GotoPrevious = (navigate: NavigateFunction) => {
+    navigate(-1);
+}
+
+
 export default function Error404() {
     const { classes } = useStyles();
-
+    const navigate = useNavigate();
+    
     return (
         <>
             <WaveSvg style={{position: "absolute", bottom: "-100px"}} />
@@ -56,11 +62,9 @@ export default function Error404() {
                     been moved to another URL.
                 </Text>
                 <Group position="center">
-                    <Link to="/">
-                        <Button variant="subtle" size="md">
-                            Take me back to home page
+                        <Button variant="subtle" size="md" onClick={() => GotoPrevious(navigate)}>
+                            Take me back to the previous page
                         </Button>
-                    </Link>
                 </Group>
             </Container>
         </>

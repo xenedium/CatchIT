@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'api',
     'frontend',
     'drf_api_logger',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -75,7 +76,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware',
     'api.JwtMiddleware.JwtMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'config.urls'
 

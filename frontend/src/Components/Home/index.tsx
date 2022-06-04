@@ -1,3 +1,3 @@
 export { FooterLinks } from './HomeFooter'
-export { HeaderResponsive } from './HomeHeader'
+export { HeaderTabsColored } from './HomeHeader'
 export { LeadGrid } from './HomeGrid'

@@ -15,6 +15,7 @@ drf-api-logger = "*"
 pyjwt = "*"
 requests = "*"
 boto3 = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 

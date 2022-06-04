@@ -7,10 +7,8 @@ import {
     Group,
     Text,
     Menu,
-    Burger,
     Image
 } from '@mantine/core';
-import { useBooleanToggle } from '@mantine/hooks';
 import {
     Logout,
     Settings,
@@ -37,7 +35,7 @@ const useStyles = createStyles((theme) => ({
 
     userMenu: {
         [theme.fn.smallerThan('xs')]: {
-            display: 'none',
+            //display: 'none',
         },
     },
 
@@ -64,7 +62,7 @@ const useStyles = createStyles((theme) => ({
 
     tabs: {
         [theme.fn.smallerThan('sm')]: {
-            display: 'none',
+            //display: 'none',
         },
     },
 
@@ -122,7 +120,6 @@ const HandleMyFavorites = (navigate: NavigateFunction) => {
 export function HeaderTabsColored({ user }: HeaderTabsProps) {
     const navigate = useNavigate();
     const { classes, theme, cx } = useStyles();
-    const [opened, toggleOpened] = useBooleanToggle(false);
     const [userMenuOpened, setUserMenuOpened] = useState(false);
 
 
@@ -137,13 +134,7 @@ export function HeaderTabsColored({ user }: HeaderTabsProps) {
                         width={100}
                     />
 
-                    <Burger
-                        opened={opened}
-                        onClick={() => toggleOpened()}
-                        className={classes.burger}
-                        size="sm"
-                        color={theme.white}
-                    />
+                    
 
                     <Menu
                         size={260}

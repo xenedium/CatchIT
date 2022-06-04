@@ -25,3 +25,8 @@ frontend/yarn-error.log*
 static/
 
 .env
+
+config/__pycache__
+
+articles/
+categories/

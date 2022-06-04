@@ -94,12 +94,22 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         if (request.jwt_user and request.jwt_user['is_admin'] == True):
+            if 'image' in request.data:
+                request.data['image'].name = f"{time()}.{request.data['image'].name}"   # Unique name for each image
             if request.GET.get('id'):       # if id is provided, edit category
                 serializer = self.get_serializer(data={'name': request.data['name'], 'created_by': request.jwt_user['id']}, instance=Category.objects.get(id=request.GET.get('id')), partial=True)
             else:                           # if id is not provided, create new category
                 serializer = CategorySerializer(data={'name': request.data['name'],'image': request.data['image'] if 'image' in request.data else None , 'created_by': request.jwt_user['id']})
             if serializer.is_valid():
                 serializer.save()
+                if 'image' in request.data:         # Upload to aws storage server
+                    request.data['image'].file.seek(0)  # Reset the file pointer since it was consumed by the serializer
+                    boto3_client.put_object(
+                        Bucket='catchit',
+                        Key=f"categories/{request.data['image'].name}",
+                        Body=request.data['image'].file,
+                        ACL='public-read'
+                    )
                 return Response({"status": 200, "message": "Category created successfully"}, status=200)
             else:
                 return Response({"status": 400, "message": "Bad request"}, status=400)
@@ -158,11 +168,11 @@ class ArticleViewSet(viewsets.ModelViewSet):    # TODO: Add create, edit, delete
             serializer = self.get_serializer(data={'title': request.data['title'], 'description': request.data['description'], 'category': request.data['category'], 'seller': request.jwt_user['id'], 'condition': request.data['condition'], 'price': request.data['price'], 'quantity': request.data['quantity'], 'city': request.data['city'], 'image': request.data['image'] if 'image' in request.data else None})
         if serializer.is_valid():
             serializer.save()
-            request.data['image'].file.seek(0)  # Reset the file pointer since it was consumed by the serializer
             if 'image' in request.data:         # Upload to aws storage server
+                request.data['image'].file.seek(0)  # Reset the file pointer since it was consumed by the serializer
                 boto3_client.put_object(
                     Bucket='catchit',
-                    Key=request.data['image'].name,
+                    Key=f"articles/{request.data['image'].name}",
                     Body=request.data['image'].file,
                     ACL='public-read'
                 )

@@ -26,6 +26,10 @@ city_choices = [
     ('Sidi Ifni', 'Sidi Ifni')
 ]
 
+# Since we are using our own custom authentication, we don't need to inherit from Django's User model
+# The custom jwt middleware ( https://github.com/xenedium/CatchIT/blob/master/api/JwtMiddleware.py ) 
+# will add the user to the request object if a token is provided in the request's headers
+
 class User(models.Model):
     firstname = models.CharField(max_length=50, null=False, editable=True)
     lastname = models.CharField(max_length=50, null=False, editable=True)

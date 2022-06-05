@@ -1,17 +1,12 @@
-from functools import partial
-from urllib import request
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
 from rest_framework import viewsets
 from .serializers import UserSerializer, CategorySerializer, ArticleSerializer
 from .models import User, Category, Article
 from jwt import encode
 from config.settings import SECRET_KEY
-from requests import post
 from config.settings import boto3_client
 from time import time
-
 import hashlib, datetime
 
 
@@ -19,6 +14,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    # All user listing is not allowed, will only show a user if the id is provided
     def get_queryset(self):
         if self.request.GET.get('id'):
             return User.objects.filter(id=self.request.GET.get('id'))
@@ -54,7 +50,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({"status": 201, "data": serializer.data}, status=201, headers=headers)
 
 
-class UserLoginAPI(APIView):                # Login user
+class UserLoginAPI(APIView):                # Generate JWT token for user
     def post(self, request):
         email, password = request.data['email'], request.data['password']
         if User.objects.filter(email=email).exists():
@@ -117,7 +113,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
             return Response({"status": 401, "message": "Unauthorized"}, status=401)
 
 
-class ArticleViewSet(viewsets.ModelViewSet):    # TODO: Add create, edit, delete
+class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 

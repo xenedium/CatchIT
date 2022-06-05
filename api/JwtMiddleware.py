@@ -1,7 +1,7 @@
 from jwt import decode
 from config.settings import SECRET_KEY
 
-class JwtMiddleware:
+class JwtMiddleware:    # Custom Middleware to add JWT to request object if the token is valid
     def __init__(self, get_response):
         self.get_response = get_response
     

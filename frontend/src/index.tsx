@@ -9,7 +9,7 @@ import HomePage from './Pages/HomePage';
 import Error404 from './Pages/Error404';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
-
+import Account from './Pages/Account';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -20,6 +20,7 @@ root.render(
             <Route path="/" element={<HomePage />} />
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
+            <Route path='/account' element={<Account />} />
 
             <Route path="*" element={<Error404 />} />
         </Routes>

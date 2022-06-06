@@ -75,7 +75,12 @@ class UserLoginAPI(APIView):                # Generate JWT token for user
             return Response({"status": 401, "message": "Invalid email or password"}, status=401)
 
 
-
+class ValidateJWT(APIView):
+    def get(self, request):
+        if request.jwt_user:
+            return Response({"status": 200, "message": "JWT token is valid"}, status=200)
+        else:
+            return Response({"status": 401, "message": "JWT token is invalid"}, status=401)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

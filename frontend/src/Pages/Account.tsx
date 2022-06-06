@@ -32,7 +32,11 @@ export default function MyAccount() {
         })
             .then(res => res.json())
             .then(res => {
-                if (res.status !== 200) navigate("/login");
+                if (res.status !== 200)
+                {
+                    localStorage.removeItem("token");
+                    navigate("/login");
+                }
                 // @ts-ignore
                 setUser(jwtDecode(token) as JWTPayload);
             })

@@ -132,6 +132,8 @@ export function HeaderTabsColored({ user }: HeaderTabsProps) {
                         src={CatchItLogo}
                         alt="CatchIt Logo"
                         width={100}
+                        onClick={() => navigate('/')}
+                        style={{ cursor: 'pointer' }}
                     />
 
                     

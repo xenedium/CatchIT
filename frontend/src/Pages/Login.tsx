@@ -14,7 +14,7 @@ import {
     Space
 } from '@mantine/core';
 
-import { AlertCircle } from 'tabler-icons-react';
+import { AlertCircle, ArrowNarrowLeft } from 'tabler-icons-react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -69,23 +69,33 @@ export default function Login() {
 
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
                 <form>
-                <TextInput label="Email" placeholder="you@mantine.dev" required error={errors} value={email} onChange={(e) => setEmail(e.currentTarget.value)} />
-                <PasswordInput label="Password" placeholder="Your password" required mt="md" error={errors} value={password} onChange={(e) => setPassword(e.currentTarget.value)} />
-                <Group position="apart" mt="md">
-                    <Checkbox label="Remember me" />
-                    <Anchor<'a'> onClick={(event) => event.preventDefault()} size="sm">
-                        Forgot password?
-                    </Anchor>
-                </Group>
-                <Space h={20} />
-                <Alert icon={<AlertCircle size={16} />} title="Error!" color="red" hidden={!errors}>
-                    Email or password is incorrect. Try again
-                </Alert>
-                <Button fullWidth mt="xl" onClick={HandleLogin}>
-                    Sign in
-                </Button>
+                    <TextInput label="Email" placeholder="you@mantine.dev" required error={errors} value={email} onChange={(e) => setEmail(e.currentTarget.value)} />
+                    <PasswordInput label="Password" placeholder="Your password" required mt="md" error={errors} value={password} onChange={(e) => setPassword(e.currentTarget.value)} />
+                    <Group position="apart" mt="md">
+                        <Checkbox label="Remember me" />
+                        <Anchor<'a'> onClick={(event) => event.preventDefault()} size="sm">
+                            Forgot password?
+                        </Anchor>
+                    </Group>
+                    <Space h={20} />
+                    <Alert icon={<AlertCircle size={16} />} title="Error!" color="red" hidden={!errors}>
+                        Email or password is incorrect. Try again
+                    </Alert>
+                    <Button fullWidth mt="xl" onClick={HandleLogin}>
+                        Sign in
+                    </Button>
                 </form>
+                <Button
+                    fullWidth
+                    color={"dark"}
+                    mt="xl"
+                    onClick={() => navigate('/')}
+                    leftIcon={<ArrowNarrowLeft size={16} />}
+                >
+                    Back to home page
+                </Button>
             </Paper>
+
         </Container>
     );
 }

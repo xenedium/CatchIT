@@ -13,7 +13,7 @@ import {
     Alert
 } from '@mantine/core';
 
-import { AlertCircle } from 'tabler-icons-react';
+import { AlertCircle, ArrowNarrowLeft } from 'tabler-icons-react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -139,6 +139,15 @@ export default function Register() {
                 <Button fullWidth mt="xl" onClick={HandleRegister}>
                     Register
                 </Button>
+                <Button 
+                fullWidth 
+                color={"dark"} 
+                mt="xl" 
+                onClick={() => navigate('/')}
+                leftIcon={<ArrowNarrowLeft size={16} />}
+                >
+                Back to home page
+            </Button>
             </Paper>
         </Container>
     );

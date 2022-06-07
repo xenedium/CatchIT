@@ -26,7 +26,6 @@ const useStyles = createStyles((theme) => ({
         paddingTop: theme.spacing.sm,
         backgroundColor: theme.colors.dark[6],
         borderBottom: `1px solid ${theme.colors.dark[6]}`,
-        marginBottom: 60,
     },
 
     mainSection: {

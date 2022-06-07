@@ -17,6 +17,7 @@ import {
 import { AlertCircle, ArrowNarrowLeft } from 'tabler-icons-react';
 
 import { useNavigate } from 'react-router-dom';
+import { MagicSpinner } from 'react-spinners-kit';
 
 export default function Login() {
 
@@ -54,6 +55,9 @@ export default function Login() {
 
     return (
         <Container size={420} my={40}>
+            <Container className="text-center d-flex flex-column align-content-center align-items-center">
+                <MagicSpinner size={100} color="#000000" />
+            </Container>
             <Title
                 align="center"
                 sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
@@ -69,7 +73,7 @@ export default function Login() {
 
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
                 <form>
-                    <TextInput label="Email" placeholder="you@mantine.dev" required error={errors} value={email} onChange={(e) => setEmail(e.currentTarget.value)} />
+                    <TextInput label="Email" placeholder="you@mail.dev" required error={errors} value={email} onChange={(e) => setEmail(e.currentTarget.value)} />
                     <PasswordInput label="Password" placeholder="Your password" required mt="md" error={errors} value={password} onChange={(e) => setPassword(e.currentTarget.value)} />
                     <Group position="apart" mt="md">
                         <Checkbox label="Remember me" />
@@ -95,7 +99,6 @@ export default function Login() {
                     Back to home page
                 </Button>
             </Paper>
-
         </Container>
     );
 }

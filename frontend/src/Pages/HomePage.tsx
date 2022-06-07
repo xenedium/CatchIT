@@ -119,6 +119,9 @@ export function HeroBullets() {
                                 <b>TypeScript based</b> - frontend built with type safety in mind 
                             </List.Item>
                             <List.Item>
+                                <b>Fully responsive </b> - All pages are fully responsive and work on any device
+                            </List.Item>
+                            <List.Item>
                                 <b>Supports image upload</b> - all uploaded images are stored in S3
                             </List.Item>
                             <List.Item>
@@ -132,9 +135,8 @@ export function HeroBullets() {
                                 <b>MySQL database </b> - All user data are stored in a MySQL database <Space />( User passwords are hashed )
                             </List.Item>
                             <List.Item>
-                                <b>CRUD </b> - All CRUD operations are supported
+                                <b>CRUD </b> - All CRUD operations are implemented in the backend
                             </List.Item>
-                            
                         </List>
 
                         <Group mt={30}>

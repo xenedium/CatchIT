@@ -16,6 +16,7 @@ import {
 import { AlertCircle, ArrowNarrowLeft } from 'tabler-icons-react';
 
 import { useNavigate } from 'react-router-dom';
+import { MagicSpinner } from 'react-spinners-kit';
 
 interface Errors {
     active: boolean;
@@ -37,7 +38,7 @@ export default function Register() {
     const [phone_number, setPhoneNumber] = useState<string>('');
     const [city, setCity] = useState<string>('Casablanca');
 
-    const [errors, setErrors] = useState<Errors>({active: false, message: ''});
+    const [errors, setErrors] = useState<Errors>({ active: false, message: '' });
 
     const HandleRegister = () => {
         fetch('/api/users/', {
@@ -70,21 +71,23 @@ export default function Register() {
                     })
                         .then(res => res.json())
                         .then(res => {
-                                localStorage.setItem('token', `Bearer ${res.token}`);
-                                navigate('/');
+                            localStorage.setItem('token', `Bearer ${res.token}`);
+                            navigate('/');
                         })
                 }
-                else
-                {
-                    setErrors({active: true, message: res.message});
+                else {
+                    setErrors({ active: true, message: res.message });
                 }
-                
+
             })
     }
 
 
     return (
         <Container size={420} my={40}>
+            <Container className="text-center d-flex flex-column align-content-center align-items-center">
+                <MagicSpinner size={100} color="#000000" />
+            </Container>
             <Title
                 align="center"
                 sx={(theme) => ({ fontFamily: `Greycliff CF, ${theme.fontFamily}`, fontWeight: 900 })}
@@ -99,7 +102,7 @@ export default function Register() {
             </Text>
 
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-                <TextInput label="Email" placeholder="you@mantine.dev" required value={email} onChange={(e) => setEmail(e.currentTarget.value)} />
+                <TextInput label="Email" placeholder="you@mail.dev" required value={email} onChange={(e) => setEmail(e.currentTarget.value)} />
                 <TextInput label="Firstname" placeholder="Your first name..." required value={firstname} onChange={(e) => setFirstName(e.currentTarget.value)} />
                 <TextInput label="Lastname" placeholder="Your last name..." required value={lastname} onChange={(e) => setLastName(e.currentTarget.value)} />
                 <TextInput label="Phone Number" placeholder="0612345678" required value={phone_number} onChange={(e) => setPhoneNumber(e.currentTarget.value)} />
@@ -139,15 +142,15 @@ export default function Register() {
                 <Button fullWidth mt="xl" onClick={HandleRegister}>
                     Register
                 </Button>
-                <Button 
-                fullWidth 
-                color={"dark"} 
-                mt="xl" 
-                onClick={() => navigate('/')}
-                leftIcon={<ArrowNarrowLeft size={16} />}
+                <Button
+                    fullWidth
+                    color={"dark"}
+                    mt="xl"
+                    onClick={() => navigate('/')}
+                    leftIcon={<ArrowNarrowLeft size={16} />}
                 >
-                Back to home page
-            </Button>
+                    Back to home page
+                </Button>
             </Paper>
         </Container>
     );

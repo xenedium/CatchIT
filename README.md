@@ -4,13 +4,25 @@
 
 # Steps :
 - Make a copy of the ```.env.example```  file and rename it to ```.env```
-- Create and fill github secrets with the corresponding values
+- Create all of these github secrets.
+```
+    AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY
+    DATABASE_HOST
+    DATABASE_NAME
+    DATABASE_PASSWORD
+    DATABASE_PORT
+    DATABASE_USER
+    DEBUG_MODE
+    HEROKU_API_KEY
+    HEROKU_APP
+    HEROKU_EMAIL
+    SECRET_KEY
+```
 
 # Description :
+### An open source Django React school project that uses JWT authentication and a REST API. The topic is an e-commerce website that lets users create, edit and delete their own articles and also discover other users products.
 
-### CatchIT, a webapp for buying and selling any type of valuable items.
-### Create your account and start selling right away !
-### This app is an academic project still under development.
 
 # Infos :
 - ### For each commit in this repository (or internal pull request) the commited code will pass through a linter then some tests to see if the code can be safely deployed.
@@ -29,3 +41,4 @@
 |```/api/categories/```|POST|name (Required)|Will create a new category. Note that this route is secured and a JWT (with admin privileges) needs to be provided in the headers section, will throw a forbidden (403) if the user requesting is not an admin |
 |```/api/articles/```|GET|id, title, user_id, category_id (One of them is required)|Returns one or more article depending on the query, one of the params is REQUIRED if more than one is provided, only one will be taken into consideration, more filtering must be done client side.|
 |```/api/articles```|POST|title, description, category, seller, condition, price, quantity, city, image (optional)|Will create an article if all of the fields are provided or edit an article if the id is provided (Body), returns a Bad Request (400) if one of the required fields is missing, or an Unauthorized (403) if no JWT is provided|
+|```/api/validate-jwt```|GET|Authorization header|Will validate the token. Example of response payload if valid: {"status": 200, "message": "JWT token is valid"}|

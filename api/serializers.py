@@ -116,7 +116,6 @@ class ArticleSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"status": 500, "message": "Internal server error", "error": str(e)})
     
     def update(self, instance, validated_data):
-        print('validated_data', validated_data)
         if 'title' in validated_data:
             instance.title = validated_data['title']
         if 'description' in validated_data:

@@ -5,7 +5,8 @@ from .views import (
     CategoryViewSet,
     ArticleViewSet,
     UserViewSet,
-    ValidateJWT
+    ValidateJWT,
+    LogerView
 )
 
 from rest_framework.routers import DefaultRouter
@@ -20,5 +21,6 @@ router.register(r'users', UserViewSet, basename='users')                # Get us
 urlpatterns = [
     path('auth-login', UserLoginAPI.as_view(), name='users'),           # Login existing user
     path('validate-jwt', ValidateJWT.as_view(), name='validate-jwt'),   # Validate JWT token
+    path('log', LogerView.as_view(), name='log'),                       # Logger
     path('', include(router.urls)),
 ]

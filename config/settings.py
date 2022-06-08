@@ -180,3 +180,7 @@ REST_FRAMEWORK = {
 
 if not DEBUG:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = ('rest_framework.renderers.JSONRenderer',)
+
+
+# Discord webhook
+DISCORD_WEBHOOK_URL = env('DISCORD_WEBHOOK_URL') or None

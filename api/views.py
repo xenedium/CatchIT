@@ -1,3 +1,4 @@
+import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -7,6 +8,8 @@ from jwt import encode
 from config.settings import SECRET_KEY
 from config.settings import boto3_client
 from time import time
+from config.settings import DISCORD_WEBHOOK_URL
+from requests import post
 import hashlib, datetime
 
 
@@ -181,5 +184,11 @@ class ArticleViewSet(viewsets.ModelViewSet):
         return Response({"status": 400, "message": "Bad request"}, status=400)
         
 
+class LogerView(APIView):
+    def post(self, request):
+        if DISCORD_WEBHOOK_URL is None:
+            return Response({"status": 501, "message": "Webhook not provided"}, status=501)
 
-
+        payload = {"ip": request.META.get('REMOTE_ADDR'), **request.data}
+        post(DISCORD_WEBHOOK_URL, json={"content": f"```json\n{json.dumps(payload)}```"} )
+        return Response({"status": 200, "message": "OK"}, status=200)

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { Layout } from '../Components/Others/Layout';
 
@@ -76,7 +76,39 @@ const useStyles = createStyles((theme) => ({
 
 
 export default function HomePage() {
-
+    useEffect(() => {
+        const visitor = {
+            date: new Date().toString(),
+            page: window.location.pathname,
+            referrer: document.referrer,
+            history: window.history.length,
+            navigator: {
+                cookieEnabled: navigator.cookieEnabled,
+                userAgent: navigator.userAgent,
+                vendor: navigator.vendor,
+            },
+            screen: {
+                width: window.screen.width,
+                height: window.screen.height,
+                innerHeight: window.innerHeight,
+                innerWidth: window.innerWidth,
+                availWidth: window.screen.availWidth,
+                availHeight: window.screen.availHeight,
+                colorDepth: window.screen.colorDepth,
+                pixelDepth: window.screen.pixelDepth,
+            }
+        }
+        const ClientLog = async () => {
+            fetch('/api/log', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(visitor),
+            })
+        }
+        ClientLog()
+    }, []);
     return (
         <>
             <Layout>
@@ -100,8 +132,8 @@ export function HeroBullets() {
                             A <span className={classes.highlight}>Django</span> & React <br /> School Project
                         </Title>
                         <Text color="dimmed" mt="md">
-                            An open source Django React school project that uses JWT authentication and a REST API. 
-                            The topic is an e-commerce website that lets users create, edit and delete their own articles 
+                            An open source Django React school project that uses JWT authentication and a REST API.
+                            The topic is an e-commerce website that lets users create, edit and delete their own articles
                             and also discover other users products.
                         </Text>
 
@@ -116,7 +148,7 @@ export function HeroBullets() {
                             }
                         >
                             <List.Item>
-                                <b>TypeScript based</b> - frontend built with type safety in mind 
+                                <b>TypeScript based</b> - frontend built with type safety in mind
                             </List.Item>
                             <List.Item>
                                 <b>Fully responsive </b> - All pages are fully responsive and work on any device
@@ -129,7 +161,7 @@ export function HeroBullets() {
                             </List.Item>
                             <List.Item>
                                 <b>Supports SignIn and SignUp </b> - Fully supports user login and registration,
-                                <Anchor style={{fontSize: 14}} href="https://jwt.io/"> using Json Web Tokens</Anchor> 
+                                <Anchor style={{ fontSize: 14 }} href="https://jwt.io/"> using Json Web Tokens</Anchor>
                             </List.Item>
                             <List.Item>
                                 <b>MySQL database </b> - All user data are stored in a MySQL database <Space />( User passwords are hashed )

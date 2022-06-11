@@ -41,6 +41,7 @@ class User(models.Model):
     is_admin = models.BooleanField(default=False, null=False)
     is_superuser = models.BooleanField(default=False, null=False)
     is_banned = models.BooleanField(default=False, null=False)
+    image = models.ImageField(upload_to='users', null=True, editable=True)
 
     def __str__(self):
         return self.firstname

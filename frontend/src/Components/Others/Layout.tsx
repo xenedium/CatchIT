@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import jwtDecode from "jwt-decode";
 import {
     HeaderTabsColored,
     FooterLinks,
-}
-    from '../Home';
+} from '../Home';
+
+import { FullLoader } from './FullLoader';
+
 
 interface HeaderTabsProps {
     user: { name: string; image: string };
@@ -56,10 +57,9 @@ const footerLinks: FooterLinksProps = {
 }
 
 
-
-
 export const Layout = ({ children }: Props) => {
 
+    const [loading, setLoading] = useState(true);
 
     const [headerData, setHeaderData] = useState<HeaderTabsProps>({
         user: {
@@ -69,26 +69,43 @@ export const Layout = ({ children }: Props) => {
     });
 
     useEffect(() => {
-        if (localStorage.getItem('token'))
-        {
-            //@ts-ignore
-            const user = jwtDecode(localStorage.getItem('token').split(' ')[1]);
-            setHeaderData({
-            user: {
-                //@ts-ignore
-                name: user.firstname,
-                image: "https://catchit.fra1.digitaloceanspaces.com/assets/not_signed_in.png"
-            }
-        });
+        const token: string | undefined = localStorage.getItem("token")?.split(" ")[1];
+
+        if (!token) {
+            setLoading(false);
+            return;
         }
-        
+
+        fetch('/api/validate-jwt', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.status !== 200) {
+                    localStorage.removeItem("token");
+                    setLoading(false);
+                    return;
+                }
+                setHeaderData({
+                    user: {
+                        name: res.payload.firstname,
+                        image: res.payload.image ? `https://catchit.fra1.digitaloceanspaces.com${res.payload.image}` : "https://catchit.fra1.digitaloceanspaces.com/assets/not_signed_in.png"
+                    }
+                })
+                setLoading(false);
+                
+            })
     }, [])
+
+
 
     return (
         <>
             <HeaderTabsColored user={headerData.user} />
             <main>
-                {children}
+                { !loading ? children : <FullLoader /> }
             </main>
             <FooterLinks data={footerLinks.data} />
         </>

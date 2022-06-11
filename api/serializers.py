@@ -61,6 +61,8 @@ class UserSerializer(serializers.ModelSerializer):
         # instance.phone_number = validated_data['phone_number']
         if 'city' in validated_data:
             instance.city = validated_data['city']
+        if 'image' in validated_data:
+            instance.image = validated_data['image']
         instance.save()
         return instance
 

@@ -15,6 +15,7 @@ DISABLE_LINTERS:
   - "ACTION_ACTIONLINT"
   - "MARKDOWN_MARKDOWN_LINK_CHECK"
   - "CSS_SCSS_LINT"
+  - "PYTHON_PYLINT"
 DISABLE:
   - COPYPASTE # Comment to enable checks of excessive copy-pastes
   - SPELL # Comment to enable checks of spelling mistakes

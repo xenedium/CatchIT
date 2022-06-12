@@ -61,7 +61,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     ACL='public-read'
                 )
             headers = self.get_success_headers(serializer.data)
-            return Response({'status': 200, 'data': serializer.data}, status=201, headers=headers)
+            return Response({'status': 201, 'data': serializer.data}, status=201, headers=headers)
         return Response({'status': 400, 'data': serializer.errors}, status=400)
 
 

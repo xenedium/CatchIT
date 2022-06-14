@@ -55,6 +55,12 @@ export default function MyArticles() {
                     })
                         .then(res => res.json())
                         .then(res => {
+                            if (res.status == 404)
+                            {
+                                setIsLoading(false);
+                                setArticles([])
+                                return;
+                            }
                             setArticles(res.data.filter((article: Article) => (searchParams.get("sold") === "true" ? article.is_sold : !article.is_sold)))
                             setIsLoading(false);
                         })

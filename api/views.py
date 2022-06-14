@@ -180,7 +180,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response({"status": 200, "data": serializer.data}, status=200)
 
     def create(self, request):
         if request.jwt_user is None:                                              # Not signed in

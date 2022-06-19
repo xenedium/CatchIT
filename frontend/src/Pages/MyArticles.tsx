@@ -42,7 +42,8 @@ export default function MyArticles() {
             .then(res => res.json())
             .then(res => {
                 if (res.status !== 200) {
-                    navigate(-1);
+                    localStorage.removeItem("token");
+                    navigate('/login');
                 }
                 else {
                     setName(res.payload.firstname);

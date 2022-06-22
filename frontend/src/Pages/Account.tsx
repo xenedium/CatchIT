@@ -3,6 +3,7 @@ import { Layout } from "../Components/Others/Layout";
 import { useNavigate } from "react-router-dom";
 import { Container, Image, Space, Title, Button, TextInput, Select, PasswordInput, createStyles } from "@mantine/core";
 import { Edit, At, Phone, Check, User, Lock, Key } from 'tabler-icons-react';
+import PublicUrl from '../Config'
 
 interface UserPayload {
     id: number;
@@ -36,7 +37,7 @@ export default function MyAccount() {
     const navigate = useNavigate();
 
     const HandleUserUpdate = () => {
-        fetch("/api/users/", {
+        fetch(`${PublicUrl}/api/users/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -54,7 +55,7 @@ export default function MyAccount() {
 
     const HandlePasswordUpdate = () => {
         if (password !== passwordConfirm) return;
-        fetch("/api/users/", {
+        fetch(`${PublicUrl}/api/users/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -70,7 +71,7 @@ export default function MyAccount() {
         e.preventDefault();
         let formData = new FormData();
         formData.append("image", e.target.files[0]);
-        fetch("/api/users/",
+        fetch(`${PublicUrl}/api/users/`,
             {
                 method: "POST",
                 headers:
@@ -94,7 +95,7 @@ export default function MyAccount() {
 
         if (!token) navigate("/login");
 
-        fetch('/api/validate-jwt', {
+        fetch(`${PublicUrl}/api/validate-jwt`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

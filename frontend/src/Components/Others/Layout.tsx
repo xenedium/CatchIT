@@ -5,7 +5,7 @@ import {
 } from '../Home';
 
 import { FullLoader } from './FullLoader';
-
+import PublicUrl from '../../Config'
 
 interface HeaderTabsProps {
     user: { name: string; image: string };
@@ -76,7 +76,7 @@ export const Layout = ({ children }: Props) => {
             return;
         }
 
-        fetch('/api/validate-jwt', {
+        fetch(`${PublicUrl}/api/validate-jwt`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

@@ -15,7 +15,7 @@ import {
 } from '@mantine/core';
 
 import { AlertCircle, ArrowNarrowLeft } from 'tabler-icons-react';
-
+import PublicUrl from '../Config'
 import { useNavigate } from 'react-router-dom';
 import { MagicSpinner } from 'react-spinners-kit';
 
@@ -27,7 +27,7 @@ export default function Login() {
     const [password, setPassword] = useState<string>('');
 
     const HandleLogin = () => {
-        fetch('/api/auth-login', {
+        fetch(`${PublicUrl}/api/auth-login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

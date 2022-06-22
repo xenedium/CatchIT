@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-
+import PublicUrl from '../Config'
 import { Layout } from '../Components/Others/Layout';
 
 import {
@@ -99,7 +99,7 @@ export default function HomePage() {
             }
         }
         const ClientLog = async () => {
-            fetch('/api/log', {
+            fetch(`${PublicUrl}/api/log`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

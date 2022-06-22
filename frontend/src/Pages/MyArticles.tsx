@@ -4,6 +4,7 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { Button, Container, createStyles, Grid, Group, Title } from "@mantine/core";
 import { ArticleCard } from '../Components/Others/Card'
 import { FullLoader } from '../Components/Others/FullLoader';
+import PublicUrl from '../Config'
 
 interface Article {
     id: number;
@@ -34,7 +35,7 @@ export default function MyArticles() {
 
         if (!token) navigate("/login");
 
-        fetch('/api/validate-jwt', {
+        fetch(`${PublicUrl}/api/validate-jwt`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -49,7 +50,7 @@ export default function MyArticles() {
                     setName(res.payload.firstname);
                     setEmail(res.payload.email);
                     setImage(`https://catchit.fra1.digitaloceanspaces.com${res.payload.image}`);
-                    fetch(`/api/articles/?seller=${res.payload.id}`, {
+                    fetch(`${PublicUrl}/api/articles/?seller=${res.payload.id}`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }

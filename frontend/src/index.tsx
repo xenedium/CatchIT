@@ -11,6 +11,8 @@ import Login from './Pages/Login';
 import Register from './Pages/Register';
 import Account from './Pages/Account';
 import MyArticles from './Pages/MyArticles';
+import Article from './Pages/Article';
+import Favorites from './Pages/Favorites';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -23,6 +25,8 @@ root.render(
             <Route path='/register' element={<Register />} />
             <Route path='/account' element={<Account />} />
             <Route path='/my-articles' element={<MyArticles />} />
+            <Route path='/article' element={<Article />} />
+            <Route path='/my-favorites' element={<Favorites />} />
 
             <Route path="*" element={<Error404 />} />
         </Routes>

@@ -5,6 +5,11 @@ import { Container, Image, Space, Title, Button, TextInput, Select, PasswordInpu
 import { Edit, At, Phone, Check, User, Lock, Key } from 'tabler-icons-react';
 import PublicUrl from '../Config'
 
+// "Everything that lives is designed to end. 
+// They are perpetually trapped in a never-ending spiral of life and death. 
+// However, life is all about the struggle within this cycle. That is what 'we' believe."
+// POD 153 @ Ending E.
+
 interface UserPayload {
     id: number;
     firstname: string;

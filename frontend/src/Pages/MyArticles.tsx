@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../Components/Others/Layout";
-import { useSearchParams, useNavigate, Link } from 'react-router-dom';
-import { Button, Container, createStyles, Grid, Group, Title } from "@mantine/core";
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { Container, Grid } from "@mantine/core";
 import { ArticleCard } from '../Components/Others/Card'
 import { FullLoader } from '../Components/Others/FullLoader';
+import { NothingFound, NothingFoundType } from "../Components/Others/NothingFound";
 import PublicUrl from '../Config'
 
 interface Article {
@@ -79,6 +80,7 @@ export default function MyArticles() {
                         (
                             <Grid.Col xs={4}>
                                 <ArticleCard {...{
+                                    id: article.id,
                                     image: `https://catchit.fra1.digitaloceanspaces.com/${article.image.split('/')[3]}/${article.image.split('/')[4]}`,
                                     title: article.title,
                                     link: "/article/?id=" + article.id,
@@ -91,40 +93,11 @@ export default function MyArticles() {
                                 }} />
                             </Grid.Col>
                         ))
-                            : <NothingFound />          //No articles found
+                            : <NothingFound type={NothingFoundType.NoArticles} />          //No articles found
                         : <FullLoader />                //Loading
                     }
                 </Grid>
             </Container>
         </Layout>
-    );
-}
-
-const useStyles = createStyles((theme) => ({
-    title: {
-        fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-        textAlign: 'center',
-        fontWeight: 900,
-        fontSize: 38,
-        color: theme.black,
-
-        [theme.fn.smallerThan('sm')]: {
-            fontSize: 32,
-        },
-    }
-}));
-
-export function NothingFound() {
-    const { classes } = useStyles();
-
-    return (
-            <Container>
-                <Title className={classes.title}>Looks like you don't have any article...</Title>
-                <Group position="center">
-                    <Button size="md" component={Link} to="/" style={{marginTop: 50, marginBottom: 50}}>
-                        Go back
-                    </Button>
-                </Group>
-            </Container>
     );
 }

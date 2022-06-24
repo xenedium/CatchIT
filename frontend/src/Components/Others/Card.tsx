@@ -1,7 +1,8 @@
 import React from 'react';
-import { createStyles, Card, Image, ActionIcon, Group, Text, Avatar, Button } from '@mantine/core';
+import { createStyles, Card, Image, ActionIcon, Group, Text, Avatar, Button, Dialog } from '@mantine/core';
 import { Heart, Clipboard } from 'tabler-icons-react';
 import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '@mantine/hooks';
 
 const useStyles = createStyles((theme) => ({
     card: {
@@ -21,6 +22,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface ArticleCardFooterProps {
+    id: number;
     image: string;
     title: string;
     link: string;
@@ -32,6 +34,7 @@ interface ArticleCardFooterProps {
 }
 
 export function ArticleCard({
+    id,
     image,
     title,
     link,
@@ -39,6 +42,16 @@ export function ArticleCard({
 }: ArticleCardFooterProps) {
     const { classes, theme } = useStyles();
     const navigate = useNavigate();
+    const [favorites, setFavorites] = useLocalStorage<number[]>({
+        key: "favorites",
+        defaultValue: []
+    });
+    const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+
+    const HandleAddToFavorite = () => {
+        if (!favorites.includes(id)) setFavorites([...favorites, id]);
+        setIsDialogOpen(true);
+    }
 
     return (
         <Card withBorder p="lg" radius="md" className={classes.card}>
@@ -66,7 +79,7 @@ export function ArticleCard({
                         View
                     </Button>
                     <Group spacing={0}>
-                        <ActionIcon onClick={() => { alert('add to favs') }}>
+                        <ActionIcon onClick={HandleAddToFavorite}>
                             <Heart size={18} color={theme.colors.red[6]} />
                         </ActionIcon>
                         <ActionIcon onClick={() => { navigator.clipboard.writeText(`https://catchit.herokuapp.com${link}`) }}>
@@ -75,6 +88,14 @@ export function ArticleCard({
                     </Group>
                 </Group>
             </Card.Section>
+            <Dialog
+                opened={isDialogOpen}
+                onClose={() => setIsDialogOpen(false)}
+                withCloseButton
+                size={"xl"}
+            >
+                <Heart /> Article {title} added to favorites !
+            </Dialog>
         </Card>
     );
 }

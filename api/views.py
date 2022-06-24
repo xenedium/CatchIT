@@ -157,6 +157,9 @@ class ArticleViewSet(viewsets.ModelViewSet):
                     return Article.objects.filter(seller=self.request.GET.get('seller'))
             return Article.objects.filter(seller=self.request.GET.get('seller'), is_sold=False)
         elif self.request.GET.get('id'):
+            if self.request.jwt_user:
+                if self.request.jwt_user['id'] == int(self.request.GET.get('id')):
+                    return Article.objects.filter(id=self.request.GET.get('id'))
             return Article.objects.filter(id=self.request.GET.get('id'), is_sold=False)
         elif self.request.GET.get('title'):
             return Article.objects.filter(title__icontains=self.request.GET.get('title'), is_sold=False)

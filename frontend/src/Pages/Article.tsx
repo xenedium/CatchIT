@@ -132,7 +132,7 @@ export default function ArticlePage() {
                             <Container className={classes.container}>
                                 <Container>
                                     <Image
-                                        src={`https://catchit.fra1.digitaloceanspaces.com/${article.image.split('/')[3]}/${article.image.split('/')[4]}`}
+                                        src={article.image ? `https://catchit.fra1.digitaloceanspaces.com/${article.image.split('/')[3]}/${article.image.split('/')[4]}` : "https://catchit.fra1.digitaloceanspaces.com/assets/no_image.png"}
                                         alt={article.title}
                                     />
                                 </Container>

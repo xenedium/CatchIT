@@ -62,16 +62,20 @@ export function ArticleCard({
             <Text weight={700} className={classes.title} mt="xs">
                 {title}
             </Text>
+            {
+                author.name !== "" ?
+                    <Group mt="lg">
+                        <Avatar src={author.image} radius="sm" />
+                        <div>
+                            <Text weight={500}>{author.name}</Text>
+                            <Text size="xs" color="dimmed">
+                                {author.description}
+                            </Text>
+                        </div>
+                    </Group>
+                    : null
+            }
 
-            <Group mt="lg">
-                <Avatar src={author.image} radius="sm" />
-                <div>
-                    <Text weight={500}>{author.name}</Text>
-                    <Text size="xs" color="dimmed">
-                        {author.description}
-                    </Text>
-                </div>
-            </Group>
 
             <Card.Section className={classes.footer}>
                 <Group position="apart">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../Components/Others/Layout";
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Container, Grid } from "@mantine/core";
+import { Container, Grid, Title } from "@mantine/core";
 import { ArticleCard } from '../Components/Others/Card'
 import { FullLoader } from '../Components/Others/FullLoader';
 import { NothingFound, NothingFoundType } from "../Components/Others/NothingFound";
@@ -74,6 +74,7 @@ export default function MyArticles() {
     return (
         <Layout>
             <Container style={{ marginTop: 40 }}>
+            <Title style={{marginBottom: 40}} >My {searchParams.get('sold') === "true" ? "sold" : "listed"} articles: </Title>
                 <Grid>
                     {!isLoading ?
                         articles.length > 0 ? articles.map(article =>
@@ -81,7 +82,7 @@ export default function MyArticles() {
                             <Grid.Col xs={4}>
                                 <ArticleCard {...{
                                     id: article.id,
-                                    image: `https://catchit.fra1.digitaloceanspaces.com/${article.image.split('/')[3]}/${article.image.split('/')[4]}`,
+                                    image: article.image ? `https://catchit.fra1.digitaloceanspaces.com/${article.image.split('/')[3]}/${article.image.split('/')[4]}` : "https://catchit.fra1.digitaloceanspaces.com/assets/no_image.png",
                                     title: article.title,
                                     link: "/article/?id=" + article.id,
                                     author: {

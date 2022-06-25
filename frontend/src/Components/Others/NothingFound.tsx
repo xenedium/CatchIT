@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 export enum NothingFoundType {
     NotFound,
     NoArticles,
+    NoFavorites,
 }
 
 const useStyles = createStyles((theme) => ({
@@ -26,23 +27,27 @@ export function NothingFound({ type }: { type: NothingFoundType }) {
     const navigate = useNavigate();
 
     return (
-            <Container>
-                <Title className={classes.title}>
-                    {
-                        type === NothingFoundType.NotFound ?
-                            "The article you are looking for might have been removed or does not exist." :
-                            "Looks like you don't have any article..."
-                    }
-                </Title>
-                <Group position="center">
-                    <Button
-                        size="md"
-                        style={{marginTop: 50, marginBottom: 50}}
-                        onClick={ () => navigate(-1) }
-                    >
-                        Go back
-                    </Button>
-                </Group>
-            </Container>
+        <Container>
+            <Title className={classes.title}>
+                {
+                    type === NothingFoundType.NotFound ?
+                        "The article you are looking for might have been removed or does not exist." :
+                        type === NothingFoundType.NoArticles ?
+                            "Looks like you don't have any article..." :
+                            type === NothingFoundType.NoFavorites ?
+                                "Looks like you don't have any favorite article..." :
+                                "Unknown error"
+                }
+            </Title>
+            <Group position="center">
+                <Button
+                    size="md"
+                    style={{ marginTop: 50, marginBottom: 50 }}
+                    onClick={() => navigate(-1)}
+                >
+                    Go back
+                </Button>
+            </Group>
+        </Container>
     );
 }

@@ -14,6 +14,7 @@ import MyArticles from './Pages/MyArticles';
 import Article from './Pages/Article';
 import Favorites from './Pages/Favorites';
 import Articles from './Pages/Articles';
+import AddArticle from './Pages/AddArticle';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -29,6 +30,7 @@ root.render(
             <Route path='/article' element={<Article />} />
             <Route path='/my-favorites' element={<Favorites />} />
             <Route path='/articles' element={<Articles />} />
+            <Route path='/add-article' element={<AddArticle />} />
 
             <Route path="*" element={<Error404 />} />
         </Routes>

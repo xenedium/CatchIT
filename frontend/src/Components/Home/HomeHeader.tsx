@@ -16,6 +16,7 @@ import {
     ShoppingCartOff,
     ChevronDown,
     Heart,
+    Plus,
 } from 'tabler-icons-react';
 import CatchItLogo from '../../Assets/Images/CatchItLogo.jpeg'
 
@@ -116,6 +117,10 @@ const HandleMyFavorites = (navigate: NavigateFunction) => {
     navigate('/my-favorites');
 }
 
+const HandleAddArticle = (navigate: NavigateFunction) => {
+    navigate('/add-article');
+}
+
 export function HeaderTabsColored({ user }: HeaderTabsProps) {
     const navigate = useNavigate();
     const { classes, theme, cx } = useStyles();
@@ -158,6 +163,7 @@ export function HeaderTabsColored({ user }: HeaderTabsProps) {
                             </UnstyledButton>
                         }
                     >
+                        <Menu.Item icon={<Plus size={14} />} onClick={() => HandleAddArticle(navigate)} > Add article </Menu.Item>
                         <Menu.Item icon={<Heart size={14} />} onClick={() => HandleMyFavorites(navigate)} > Favorites </Menu.Item>
 
                         <Menu.Item icon={<ShoppingCart size={14} />} onClick={() => HandleMyAvailableArticles(navigate)} >My Listed Articles</Menu.Item>

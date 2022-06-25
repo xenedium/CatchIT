@@ -1,7 +1,10 @@
 import React from 'react'
+import { Layout } from '../Components/Others/Layout'
 
 export default function Articles() {
   return (
-    <div>Articles</div>
+    <Layout>
+        Articles
+    </Layout>
   )
 }

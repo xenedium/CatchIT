@@ -206,7 +206,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
                     Body=request.data['image'].file,
                     ACL='public-read'
                 )
-            return Response({"status": 200, "message": "Article created or updated successfully", "article": serializer.data}, status=200)
+            return Response({"status": 201, "message": "Article created or updated successfully", "article": serializer.data}, status=201)
         return Response({"status": 400, "message": "Bad request", "error": serializer.errors}, status=400)
         
 

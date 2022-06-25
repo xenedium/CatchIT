@@ -46,7 +46,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         if request.jwt_user:        # If user is logged in, edit his profile
             if 'image' in request.data:
-                request.data['image'].name = f"{time()}.{request.data['image'].name}"   # Unique name for each image
+                request.data['image'].name = f"{time()}.{request.data['image'].name.replace(' ', '_')}"   # Unique name for each image
             serializer = self.get_serializer(data=request.data, instance=User.objects.get(id=request.jwt_user['id']), partial=True)
         else:                       # If user is not logged in, create new user
             serializer = self.get_serializer(data=request.data)
@@ -122,7 +122,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     def create(self, request):
         if (request.jwt_user and request.jwt_user['is_admin'] == True):
             if 'image' in request.data:
-                request.data['image'].name = f"{time()}.{request.data['image'].name}"   # Unique name for each image
+                request.data['image'].name = f"{time()}.{request.data['image'].name.replace(' ', '_')}"   # Unique name for each image
             if request.GET.get('id'):       # if id is provided, edit category
                 serializer = self.get_serializer(data={'name': request.data['name'], 'created_by': request.jwt_user['id']}, instance=Category.objects.get(id=request.GET.get('id')), partial=True)
             else:                           # if id is not provided, create new category
@@ -189,7 +189,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
         if request.jwt_user is None:                                              # Not signed in
             return Response({"status": 401, "message": "Unauthorized"}, status=401)
         if 'image' in request.data:
-            request.data['image'].name = f"{time()}.{request.data['image'].name}"   # Unique name for each image
+            request.data['image'].name = f"{time()}.{request.data['image'].name.replace(' ', '_')}"   # Unique name for each image
         if 'id' in request.data:    
             if Article.objects.get(id=request.data['id'], seller=request.jwt_user['id']) is None:   # User editing his own article
                 return Response({"status": 403, "message": "Forbidden"}, status=403)

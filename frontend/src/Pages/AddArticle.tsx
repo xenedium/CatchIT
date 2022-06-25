@@ -5,6 +5,10 @@ import PublicUrl from '../Config';
 import { createStyles, Container, Title, TextInput, Image, Space, Button, Textarea, Select, Dialog } from '@mantine/core';
 import { Edit, Plus } from 'tabler-icons-react';
 
+// Evil Is Evil. Lesser, Greater, Middling, Makes No Difference. 
+// The Degree Is Arbitrary, The Definitions Blurred.
+// If I'm To Choose Between One Evil And Another, I'd Rather Not Choose At All.
+// ― Andrzej Sapkowski, The Last Wish 
 
 const useStyles = createStyles((theme) => ({
     container: {

@@ -7,7 +7,7 @@ import PublicUrl from '../Config';
 import decode from 'jwt-decode'
 import { Container, Image, Title, createStyles, Text, Badge, Button, Modal, Dialog } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks'
-import { Heart } from 'tabler-icons-react';
+import { Check, Heart, Pencil, UserCircle } from 'tabler-icons-react';
 
 // "A future is not given to you. It is something you must take for yourself." 
 // POD 042 @ Ending E.
@@ -77,7 +77,7 @@ export default function ArticlePage() {
                 is_sold: !article?.is_sold
             })
         })
-        .then( () => window.location.reload())
+            .then(() => window.location.reload())
     }
 
     const HandleAddToFavorite = () => {
@@ -89,10 +89,14 @@ export default function ArticlePage() {
         if (!seller) {
             fetch(`${PublicUrl}/api/users/?id=${article?.seller}`)
                 .then(res => res.json())
-                .then(res => setSeller(res[0]))
+                .then(res => setSeller(res.data[0]))
         }
 
         setIsModalOpen(true);
+    }
+
+    const HandleEditArticle = () => {
+        navigate(`/edit-article/?id=${article?.id}`);
     }
 
     useEffect(() => {
@@ -165,8 +169,22 @@ export default function ArticlePage() {
                                                     fullWidth
                                                     color={"red"}
                                                     onClick={HandleMarkAsSold}
+                                                    leftIcon={<Check />}
                                                 >
                                                     {article.is_sold ? "Mark as available" : "Mark as sold"}
+                                                </Button>
+                                                : null
+                                        }
+                                        {
+                                            isCurrentUserOwner ?
+                                                <Button
+                                                    leftIcon={<Pencil />}
+                                                    style={{ marginTop: 10 }}
+                                                    fullWidth
+                                                    color={"red"}
+                                                    onClick={HandleEditArticle}
+                                                >
+                                                    Edit article
                                                 </Button>
                                                 : null
                                         }
@@ -175,6 +193,7 @@ export default function ArticlePage() {
                                             fullWidth
                                             variant="gradient" gradient={{ from: '#ed6ea0', to: '#ec8c69', deg: 35 }}
                                             onClick={HandleBuy}
+                                            leftIcon={<UserCircle />}
                                         >
                                             Contact seller
                                         </Button>

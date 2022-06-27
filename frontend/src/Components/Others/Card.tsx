@@ -54,7 +54,7 @@ export function ArticleCard({
     }
 
     return (
-        <Card withBorder p="lg" radius="md" className={classes.card}>
+        <Card withBorder p="xl" radius="md" className={classes.card}>
             <Card.Section mb="sm">
                 <Image src={image} alt={title} height={180} />
             </Card.Section>

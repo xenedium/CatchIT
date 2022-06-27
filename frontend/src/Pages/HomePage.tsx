@@ -178,6 +178,12 @@ export function HeroBullets() {
                             >
                                 Get started
                             </Button>
+                            <Button radius="xl" size="md" className={classes.control}
+                                component={Link}
+                                to="/articles"
+                            >
+                                View Articles
+                            </Button>
                             <Button<'a'> component="a" href="https://github.com/xenedium/CatchIT" variant="default" radius="xl" size="md" className={classes.control}>
                                 Source code
                             </Button>

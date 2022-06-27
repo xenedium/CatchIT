@@ -134,6 +134,8 @@ class ArticleSerializer(serializers.ModelSerializer):
             instance.is_sold = validated_data['is_sold']
         if 'city' in validated_data:
             instance.city = validated_data['city']
+        if 'image' in validated_data:
+            instance.image = validated_data['image']
         instance.save()
         return instance
 

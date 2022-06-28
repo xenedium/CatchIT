@@ -184,9 +184,11 @@ export function HeroBullets() {
                             >
                                 View Articles
                             </Button>
-                            <Button<'a'> component="a" href="https://github.com/xenedium/CatchIT" variant="default" radius="xl" size="md" className={classes.control}>
-                                Source code
-                            </Button>
+                            {/*
+                                <Button<'a'> component="a" href="https://github.com/xenedium/CatchIT" variant="default" radius="xl" size="md" className={classes.control}>
+                                    Source code
+                                </Button>
+                            */}
                         </Group>
                     </div>
                     <Image src={"https://ui.mantine.dev/_next/static/media/image.9a65bd94.svg"} className={classes.image} />

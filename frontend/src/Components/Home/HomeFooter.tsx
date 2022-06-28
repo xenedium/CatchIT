@@ -136,9 +136,7 @@ export function FooterLinks({ data }: FooterLinksProps) {
                     alt="CatchIt Logo"
                     
                 />
-                    <Text size="xs" color="dimmed" className={classes.description}>
-                        A project by <a href='https://abderraziq.com' style={{color: 'grey'}}>Ahmed Abderraziq</a>, Narjisse Loudiyi, Oussama Tahri & Walid Tika
-                    </Text>
+                    
                 </div>
                 <div className={classes.groups}>{groups}</div>
             </Container>

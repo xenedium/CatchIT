@@ -51,7 +51,7 @@ export default function Articles() {
     const [search, setSearch] = useState<string>("");
     const [city, setCity] = useState<string>("Casablanca");
     const [categories, setCategories] = useState<Category[]>([]);
-    const [category, setCategory] = useState<number>(0);
+    const [category, setCategory] = useState<number | null>(0);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [articles, setArticles] = useState<Article[]>([]);
 
@@ -82,6 +82,8 @@ export default function Articles() {
         fetch(`${PublicUrl}/api/articles/?title=${search}`)
             .then(res => res.json())
             .then(res => {
+                setCategory(0);
+                setCity("");
                 if (res.status !== 200) {
                     setIsLoading(false);
                     setArticles([]);
@@ -97,6 +99,8 @@ export default function Articles() {
         fetch(`${PublicUrl}/api/articles/?city=${city}`)
             .then(res => res.json())
             .then(res => {
+                setSearch("");
+                setCategory(null);
                 if (res.status !== 200) {
                     setIsLoading(false);
                     setArticles([]);
@@ -104,8 +108,7 @@ export default function Articles() {
                 }
                 setArticles(res.data);
                 setIsLoading(false);
-            }
-            )
+            })
     }
 
     const HandleSearchByCategory = (category: number) => {
@@ -113,6 +116,8 @@ export default function Articles() {
         fetch(`${PublicUrl}/api/articles/?category_id=${category}`)
             .then(res => res.json())
             .then(res => {
+                setSearch("");
+                setCity("");
                 if (res.status !== 200) {
                     setIsLoading(false);
                     setArticles([]);
@@ -194,7 +199,7 @@ export default function Articles() {
                         style={{ marginTop: 10 }}
                     />
                 </Container>
-                <Container>
+                <Container size={"xl"} style={{width: "100%"}} >
                         <Grid style={{marginTop: 20}}>
                             {isLoading ? <FullLoader /> :
                                 articles.map(article => (

@@ -1,5 +1,5 @@
 # CatchIT
-## Visit at [https://catchit.herokuapp.com/](https://catchit.herokuapp.com/)
+## Not deployed anymore ! Currently offline.
 
 
 # Steps :
